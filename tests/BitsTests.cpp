@@ -38,6 +38,8 @@ void BitsTests::testFromFile(){
     unsigned char *f2 = bits.read(2);
     unsigned int c_f2 = memcmp(f2, "Th", 2);
     CPPUNIT_ASSERT(c_f2 == 0);
+
+    CPPUNIT_ASSERT(remove(tmpfn) == 0);
 }
 
 void BitsTests::testFromMem(){
