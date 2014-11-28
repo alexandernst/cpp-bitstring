@@ -1,9 +1,16 @@
 language: cpp
+
 compiler:
     - gcc
+
+before_install:
+    - sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test
+
 install:
     - sudo apt-get update
-    - sudo apt-get install libcppunit-dev
+    - sudo apt-get install -qq g++-4.8 libcppunit-dev
+    - export CXX="g++-4.8"
+
 script:
     - make
     - make test
