@@ -33,3 +33,6 @@ dist/
 
 # NetBeans config files
 nbproject/private/
+
+# Other
+.dep.inc
