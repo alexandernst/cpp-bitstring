@@ -8,8 +8,8 @@ before_install:
 
 install:
     - sudo apt-get update
-    - sudo apt-get install -qq g++-4.8 libcppunit-dev
-    - export CXX="g++-4.8"
+    - sudo apt-get install -qq gcc-4.8 g++-4.8 libstdc++-4.8-dev libcppunit-dev
+    - sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-4.8 90
 
 script:
     - make
