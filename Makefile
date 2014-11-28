@@ -48,7 +48,7 @@
 MKDIR=mkdir
 CP=cp
 CCADMIN=CCadmin
-
+CPPFLAGS="-std=c++11"
 
 # build
 build: .build-post
