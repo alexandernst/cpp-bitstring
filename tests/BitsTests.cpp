@@ -18,6 +18,28 @@ void BitsTests::tearDown(){
 	//Finishing tests...
 }
 
+void BitsTests::testFromFile(){
+    unsigned char chunk[] = "This is a test!";
+    int64_t size = sizeof(chunk) - 1;
+
+    char tmpfn[L_tmpnam];
+    CPPUNIT_ASSERT(tmpnam(tmpfn) != NULL);
+
+    ofstream tmpf(tmpfn);
+    CPPUNIT_ASSERT(tmpf.is_open() == true);
+    tmpf << chunk;
+    tmpf.close();
+
+    Bits bits;
+    bool result = bits.fromFile(tmpfn);
+    CPPUNIT_ASSERT(result);
+    CPPUNIT_ASSERT(bits.getMaxPosition() == size);
+
+    unsigned char *f2 = bits.read(2);
+    unsigned int c_f2 = memcmp(f2, "Th", 2);
+    CPPUNIT_ASSERT(c_f2 == 0);
+}
+
 void BitsTests::testFromMem(){
 	unsigned char chunk[] = "This is a test!";
 	int64_t size = sizeof(chunk) - 1;
