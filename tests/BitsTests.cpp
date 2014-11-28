@@ -40,6 +40,7 @@ void BitsTests::testFromFile(){
     CPPUNIT_ASSERT(c_f2 == 0);
 
     CPPUNIT_ASSERT(remove(tmpfn) == 0);
+	CPPUNIT_ASSERT(1 == 2);
 }
 
 void BitsTests::testFromMem(){
