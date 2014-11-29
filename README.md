@@ -3,7 +3,7 @@ cpp-bitstring
 
 Current build status [![Build Status](https://travis-ci.org/alexandernst/cpp-bitstring.svg?branch=master)](https://travis-ci.org/alexandernst/cpp-bitstring)
 
-[Latest Docs (Doxygen)](http://alexandernst.github.io/cpp-bitstring)
+[Latest Docs](http://alexandernst.github.io/cpp-bitstring) (Doxygen)
 
 
 CPP Bitstring is a library that will help you to deal with random data that you need to parse and process.
