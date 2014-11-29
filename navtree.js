@@ -1,7 +1,7 @@
 var NAVTREE =
 [
   [ "CPP-Bitstring", "index.html", [
-    [ "cpp-bitstring [![Build Status](https://travis-ci.org/alexandernst/cpp-bitstring.svg?branch=master)](https://travis-ci.org/alexandernst/cpp-bitstring)", "md__home_alexandernst__proyectos_cpp-bitstring__r_e_a_d_m_e.html", null ],
+    [ "CPP Bitstring", "md__home_alexandernst__proyectos_cpp-bitstring__r_e_a_d_m_e.html", null ],
     [ "Classes", null, [
       [ "Class List", "annotated.html", "annotated" ],
       [ "Class Index", "classes.html", null ],
