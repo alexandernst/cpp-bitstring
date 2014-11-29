@@ -5,5 +5,7 @@ cd "$DIR"
 
 doxygen Doxyfile
 git checkout gh-pages
-mv html/* ../
+mv -f html/* ../
 rm -rf html
+git add -A
+git commit -m "Generate new docs"
