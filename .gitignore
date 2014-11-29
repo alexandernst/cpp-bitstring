@@ -36,3 +36,6 @@ nbproject/private/
 
 # Other
 .dep.inc
+
+# Doxygen
+docs/html/
