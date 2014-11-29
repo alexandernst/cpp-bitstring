@@ -8,3 +8,4 @@ git checkout gh-pages
 rsync -r -W  html/ ../
 git add -A
 git commit -m "Generate new docs"
+git checkout master
