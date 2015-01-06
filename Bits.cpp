@@ -311,11 +311,11 @@ bool Bits::testBit(unsigned int bit){
 }
 
 /**
- * Set a bit to 1 in the next to be read byte.
+ * Test a bit to 1 in the next to be read byte.
  * Keep in mind that the bit 0 is the least significant, while bit 8 is the most significant.
  * Example: In 00000010, all bits are set to 0, except bit 1 (that is, the second bit).
  * @param bit The Nth bit to set.
- * @return True if the bit was set successfully.
+ * @return True if the bit is set, false otherwise.
  */
 bool Bits::setBit(unsigned int bit){
 	if(!this->canMoveForward() || bit > 7){
@@ -330,13 +330,6 @@ bool Bits::setBit(unsigned int bit){
 	return true;
 }
 
-/**
- * Set a bit to 0 in the next to be read byte.
- * Keep in mind that the bit 0 is the least significant, while bit 8 is the most significant.
- * Example: In 00000010, all bits are set to 0, except bit 1 (that is, the second bit).
- * @param bit The Nth bit to set.
- * @return True if the bit was set successfully.
- */
 bool Bits::unsetBit(unsigned int bit){
 	if(!this->canMoveForward() || bit > 7){
 		return false;
@@ -350,13 +343,6 @@ bool Bits::unsetBit(unsigned int bit){
 	return true;
 }
 
-/**
- * Change the value of a bit in the next to be read byte.
- * Keep in mind that the bit 0 is the least significant, while bit 8 is the most significant.
- * Example: In 00000010, all bits are set to 0, except bit 1 (that is, the second bit).
- * @param bit The Nth bit to modify.
- * @return True if the bit was set successfully.
- */
 bool Bits::toggleBit(unsigned int bit){
 	if(this->testBit(bit)){
 		return this->unsetBit(bit);
