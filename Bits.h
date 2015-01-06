@@ -20,9 +20,9 @@ class Bits {
 
 		virtual ~Bits();
 
-		bool fromFile(char *fname, ios_base::openmode mode = ios::in | ios::binary);
+		bool fromFile(char *fname = NULL, ios_base::openmode mode = ios::in | ios::binary);
 
-		bool toFile(char *fname, ios_base::openmode mode = ios::out | ios::binary | ios::trunc);
+		bool toFile(char *fname = NULL, int64_t offset = 0, int64_t size = -1, ios_base::openmode mode = ios::out | ios::binary | ios::trunc);
 
 		bool fromMem(unsigned char *chunk, int64_t size);
 
