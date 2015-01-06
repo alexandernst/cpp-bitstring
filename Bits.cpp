@@ -30,11 +30,16 @@ bool Bits::fromFile(char *fname, ios_base::openmode mode){
 	ifstream file(fname, mode);
 
 	if(file.is_open()){
+		file.seekg(0, ios::end);
 		size = file.tellg();
 
-		this->data = (unsigned char *) malloc(size);
+		if(size == -1){
+			goto ex;
+		}
+
+		this->data = (unsigned char *)malloc(size);
 		if(this->data == NULL){
-			state = false;
+			goto ex;
 		}
 
 		this->position = 0;
@@ -46,6 +51,8 @@ bool Bits::fromFile(char *fname, ios_base::openmode mode){
 
 		state = true;
 	}
+
+	ex:
 
 	return state;
 }
