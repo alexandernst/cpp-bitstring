@@ -125,7 +125,7 @@ void Bits::unload(){
 
 /**
  * Read N bytes starting from the current position of the data.
- * The current position will be changed to <current position> + n.
+ * The current position will be changed to "current position" + n.
  * @param n Number of bytes to read.
  * @param reverse If set to true (default is false) the data will be returned byte-reversed.
  * @return The data that was readen or NULL if something failed.
@@ -176,7 +176,7 @@ unsigned char *Bits::peek(int64_t n, bool reverse){
 
 /**
  * Write N bytes of data read from chunk, starting from the current position of the data.
- * The current position will be changed to <current position> + n.
+ * The current position will be changed to "current position" + n.
  * @param chunk The data we want to write.
  * @param n Number of bytes we want to write from the chunk.
  * @param patch If set to false (default is true) data will be inserted without replacing, instead of patching.
@@ -271,7 +271,7 @@ int64_t Bits::findPrevious(unsigned char *pattern, int64_t n){
  * Find the nearest match to a given pattern in the data starting at the current position.
  * This, effectively, means that if you search something which is already right next
  * to the current position you'll keep "finding" it forever and ever. Just use "seek" or
- * "setPosition" to go to <current position> + 1 and continue searching from there.
+ * "setPosition" to go to "current position" + 1 and continue searching from there.
  * The current position will remain unchanged.
  * @param pattern The byte(s) pattern we are looking for.
  * @param n The number of bytes the pattern is long.
@@ -389,7 +389,7 @@ int64_t Bits::getPosition(){
 
 /**
  * Set the current position.
- * @param The position that is desired.
+ * @param pos The position that is desired.
  */
 bool Bits::setPosition(int64_t pos){
 	if(this->max_position >= pos){
