@@ -1,6 +1,10 @@
 #include "Bits.h"
 using namespace std;
 
+/**
+ * Create a new object of Bits. 'data' will be set to NULL.
+ * 'position' and 'max_position' will be set to 0.
+ */
 Bits::Bits(){
 	this->data = NULL;
 	this->position = 0;

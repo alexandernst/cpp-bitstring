@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['testbit',['testBit',['../class_bits.html#afcd89d7baee51160ad0f34212a94cfed',1,'Bits']]],
-  ['tofile',['toFile',['../class_bits.html#a7d472394ad9c28c55635c5db916f7dfd',1,'Bits']]],
-  ['togglebit',['toggleBit',['../class_bits.html#a082d18ebd2b0bba0964290202fa78579',1,'Bits']]]
+  ['seek',['seek',['../class_bits.html#a33a1d1a835989fa492b71f22fbfbde14',1,'Bits']]],
+  ['setbit',['setBit',['../class_bits.html#a508b1d4060773a9f317570077ad9bc1c',1,'Bits']]],
+  ['setposition',['setPosition',['../class_bits.html#a8517fb3f8a30b0b09d6e6f01cebb1fae',1,'Bits']]]
 ];
