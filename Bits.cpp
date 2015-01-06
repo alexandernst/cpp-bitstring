@@ -24,10 +24,10 @@ Bits::~Bits(){
  * @param mode Optional, open mode. Default is "rb".
  * @return True if data was successfully readen, otherwise false.
  */
-bool Bits::fromFile(char *fname, const char *mode){
+bool Bits::fromFile(char *fname, ios_base::openmode mode){
 	bool state = false;
 	streampos size;
-	ifstream file(fname, ios::in | ios::binary | ios::ate);
+	ifstream file(fname, mode);
 
 	if(file.is_open()){
 		size = file.tellg();

@@ -8,6 +8,9 @@
 #include <cstdlib>
 #include <fstream>
 #include <iostream>
+#include <inttypes.h>
+
+using namespace std;
 
 class Bits {
 
@@ -17,7 +20,7 @@ class Bits {
 
 		virtual ~Bits();
 
-		bool fromFile(char *fname, const char *mode = "rb");
+		bool fromFile(char *fname, ios_base::openmode mode = ios::in | ios::binary | ios::ate);
 
 		bool toFile(char *fname, const char *mode = "rb");
 
