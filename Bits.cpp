@@ -64,16 +64,40 @@ bool Bits::fromFile(char *fname, ios_base::openmode mode){
 /**
  * Write data to file.
  * @param fname The path/name of the file.
+ * @param offset An offset from which should start the dumping. Default is 0.
+ * @param size The size (in bytes) of the data to be written. Default is the length of the data holded by the object, if offset is 0, otherwise it will be calculated if not passed.
  * @param mode Optional, open mode. Default is "wb".
  * @return True if data was successfully written, otherwise false.
  */
-bool Bits::toFile(char *fname, const char *mode){
+bool Bits::toFile(char *fname, int64_t offset, int64_t size, ios_base::openmode mode){
+	if(fname == NULL){
+		goto err;
+	}
 
+	if(offset > this->max_position || offset < 0){
+		goto err;
+	}
+
+	if(offset == 0 && size == -1){
+		size = this->max_position;
+	}else if(offset > 0 && size == -1){
+		size = this->max_position - offset;
+	}
+
+	if(this->max_position - offset > size){
+		goto err;
+	}
+
+	//TODO: DUMP!
+
+	err:
+
+	return false;
 }
 
 /**
  * Load a memory chunk of data, the size of N bytes.
- * @param chunk A  pointer to the data to be loaded.
+ * @param chunk A pointer to the data to be loaded.
  * @param size Number of bytes to load.
  * @return True on success, false otherwise.
  */
