@@ -1,4 +1,4 @@
-CPP Bitstring
+CPP Bitstring (C++ Bitstring)
 =============
 
 Current build status [![Build Status](https://travis-ci.org/alexandernst/cpp-bitstring.svg?branch=master)](https://travis-ci.org/alexandernst/cpp-bitstring)
