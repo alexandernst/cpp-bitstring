@@ -62,6 +62,7 @@ class Bits {
 
 	private:
 
+		bool is_from_file;
 		unsigned char *data;
 		int64_t position, max_position;
 

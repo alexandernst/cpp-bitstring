@@ -48,6 +48,7 @@ bool Bits::fromFile(char *fname, ios_base::openmode mode){
 
 		this->position = 0;
 		this->max_position = size;
+		this->is_from_file = true;
 
 		file.seekg(0, ios::beg);
 		file.read((char *)data, size);
@@ -108,6 +109,7 @@ bool Bits::fromMem(unsigned char *chunk, int64_t size){
 		this->data = chunk;
 		this->position = 0;
 		this->max_position = size;
+		this->is_from_file = false;
 		return true;
 	}
 }
@@ -121,6 +123,7 @@ void Bits::unload(){
 	this->data = NULL;
 	this->position = 0;
 	this->max_position = 0;
+	this->is_from_file = false;
 }
 
 /**
@@ -200,10 +203,8 @@ bool Bits::write(unsigned char *chunk, int64_t n, bool patch){
 		//Finish copying until the end
 		memcpy(newdata + this->position + n, this->data + this->position, this->max_position - this->position);
 
-		try{
-			//free(this->data);
-		}catch(...){
-			//Oops...
+		if(this->is_from_file){
+			free(this->data);
 		}
 
 		this->data = newdata;
