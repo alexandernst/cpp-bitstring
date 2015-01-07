@@ -111,11 +111,11 @@ $(document).ready(function(){initNavTree('class_bits.html','');});
 <div class="title">Bits Class Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
-
-<p><code>#include &lt;<a class="el" href="_bits_8h_source.html">Bits.h</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
+<tr class="memitem:a24e56766ffd51f967c25233710335281"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_bits.html#a24e56766ffd51f967c25233710335281">Bits</a> ()</td></tr>
+<tr class="separator:a24e56766ffd51f967c25233710335281"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5e75983a7cd707d7f090e3a0e206eaef"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_bits.html#a5e75983a7cd707d7f090e3a0e206eaef">~Bits</a> ()</td></tr>
 <tr class="separator:a5e75983a7cd707d7f090e3a0e206eaef"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aafc9b84848f28f48de6b291915474f95"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_bits.html#aafc9b84848f28f48de6b291915474f95">fromFile</a> (char *fname=NULL, ios_base::openmode mode=ios::in|ios::binary)</td></tr>
@@ -142,9 +142,11 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:afcd89d7baee51160ad0f34212a94cfed"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a508b1d4060773a9f317570077ad9bc1c"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_bits.html#a508b1d4060773a9f317570077ad9bc1c">setBit</a> (unsigned int bit)</td></tr>
 <tr class="separator:a508b1d4060773a9f317570077ad9bc1c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a28155724571a1efb6c156ebffe15c959"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_bits.html#a28155724571a1efb6c156ebffe15c959">unsetBit</a> (unsigned int bit)</td></tr>
+<tr class="memitem:a28155724571a1efb6c156ebffe15c959"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a28155724571a1efb6c156ebffe15c959"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>unsetBit</b> (unsigned int bit)</td></tr>
 <tr class="separator:a28155724571a1efb6c156ebffe15c959"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a082d18ebd2b0bba0964290202fa78579"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_bits.html#a082d18ebd2b0bba0964290202fa78579">toggleBit</a> (unsigned int bit)</td></tr>
+<tr class="memitem:a082d18ebd2b0bba0964290202fa78579"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a082d18ebd2b0bba0964290202fa78579"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>toggleBit</b> (unsigned int bit)</td></tr>
 <tr class="separator:a082d18ebd2b0bba0964290202fa78579"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a04e3c81f331c9e6200b48186842573a6"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_bits.html#a04e3c81f331c9e6200b48186842573a6">printHex</a> (int64_t n)</td></tr>
 <tr class="separator:a04e3c81f331c9e6200b48186842573a6"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -159,9 +161,23 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a6cbd80797dd4f0267473da7f8760f210"><td class="memItemLeft" align="right" valign="top">int64_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_bits.html#a6cbd80797dd4f0267473da7f8760f210">getMaxPosition</a> ()</td></tr>
 <tr class="separator:a6cbd80797dd4f0267473da7f8760f210"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Create a new object of <a class="el" href="class_bits.html">Bits</a>. 'data' will be set to NULL. 'position' and 'max_position' will be set to 0. </p>
-</div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a class="anchor" id="a24e56766ffd51f967c25233710335281"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">Bits::Bits </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Create a new object of <a class="el" href="class_bits.html">Bits</a>. 'data' will be set to NULL. 'position' and 'max_position' will be set to 0. </p>
+
+</div>
+</div>
 <a class="anchor" id="a5e75983a7cd707d7f090e3a0e206eaef"></a>
 <div class="memitem">
 <div class="memproto">
@@ -519,13 +535,13 @@ Public Member Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Set a bit to 1 in the next to be read byte. Keep in mind that the bit 0 is the least significant, while bit 8 is the most significant. Example: In 00000010, all bits are set to 0, except bit 1 (that is, the second bit). </p><dl class="params"><dt>Parameters</dt><dd>
+<p>Test a bit to 1 in the next to be read byte. Keep in mind that the bit 0 is the least significant, while bit 8 is the most significant. Example: In 00000010, all bits are set to 0, except bit 1 (that is, the second bit). </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">bit</td><td>The Nth bit to set. </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>True if the bit was set successfully. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>True if the bit is set, false otherwise. </dd></dl>
 
 </div>
 </div>
@@ -622,29 +638,6 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="a082d18ebd2b0bba0964290202fa78579"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool Bits::toggleBit </td>
-          <td>(</td>
-          <td class="paramtype">unsigned int&#160;</td>
-          <td class="paramname"><em>bit</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p>Change the value of a bit in the next to be read byte. Keep in mind that the bit 0 is the least significant, while bit 8 is the most significant. Example: In 00000010, all bits are set to 0, except bit 1 (that is, the second bit). </p><dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">bit</td><td>The Nth bit to modify. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>True if the bit was set successfully. </dd></dl>
-
-</div>
-</div>
 <a class="anchor" id="ae2e964195efd12565e364406d8a12107"></a>
 <div class="memitem">
 <div class="memproto">
@@ -658,29 +651,6 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 <p>Unload whatever was loaded (if anything was loaded at all). That means that 'data' will be set to NULL. Also, 'position' and 'max_position' will be set to 0. </p>
-
-</div>
-</div>
-<a class="anchor" id="a28155724571a1efb6c156ebffe15c959"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool Bits::unsetBit </td>
-          <td>(</td>
-          <td class="paramtype">unsigned int&#160;</td>
-          <td class="paramname"><em>bit</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p>Set a bit to 0 in the next to be read byte. Keep in mind that the bit 0 is the least significant, while bit 8 is the most significant. Example: In 00000010, all bits are set to 0, except bit 1 (that is, the second bit). </p><dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">bit</td><td>The Nth bit to set. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>True if the bit was set successfully. </dd></dl>
 
 </div>
 </div>
@@ -735,7 +705,7 @@ Public Member Functions</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="class_bits.html">Bits</a></li>
-    <li class="footer">Generated on Wed Jan 7 2015 00:56:26 for CPP-Bitstring by
+    <li class="footer">Generated on Wed Jan 7 2015 01:02:42 for CPP-Bitstring by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.9.1 </li>
   </ul>

@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['peek',['peek',['../class_bits.html#abfe32aa8f18e59a0d756fb67f5594beb',1,'Bits']]],
-  ['printbits',['printBits',['../class_bits.html#ae4fbfdd7db9b774db0e1372a4e7f7f3c',1,'Bits']]],
-  ['printhex',['printHex',['../class_bits.html#a04e3c81f331c9e6200b48186842573a6',1,'Bits']]]
+  ['getdata',['getData',['../class_bits.html#a5b05a0acec43b640bfac6bd0bfa23b5b',1,'Bits']]],
+  ['getmaxposition',['getMaxPosition',['../class_bits.html#a6cbd80797dd4f0267473da7f8760f210',1,'Bits']]],
+  ['getposition',['getPosition',['../class_bits.html#a5dcfbdf7cd965ea0662acea7ff85fb98',1,'Bits']]]
 ];
