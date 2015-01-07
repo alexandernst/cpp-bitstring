@@ -27,12 +27,13 @@ Bits::~Bits(){
 bool Bits::fromFile(char *fname, ios_base::openmode mode){
 	bool state = false;
 	streampos size;
-	ifstream file(fname, mode);
+	ifstream file;
 
 	if(fname == NULL){
 		goto err;
 	}
 
+	file.open(fname, mode);
 	if(file.is_open()){
 		file.seekg(0, ios::end);
 		size = file.tellg();
@@ -71,6 +72,9 @@ bool Bits::fromFile(char *fname, ios_base::openmode mode){
  * @return True if data was successfully written, otherwise false.
  */
 bool Bits::toFile(char *fname, int64_t offset, int64_t size, ios_base::openmode mode){
+	bool state = false;
+	ofstream file;
+
 	if(fname == NULL){
 		goto err;
 	}
@@ -89,11 +93,18 @@ bool Bits::toFile(char *fname, int64_t offset, int64_t size, ios_base::openmode 
 		goto err;
 	}
 
-	//TODO: DUMP!
+	file.open(fname, mode);
+	file.seekp(0, ios::beg);
+
+	if(file.is_open()){
+		file.write((const char *)this->data + offset, size);
+		file.close();
+		state = true;
+	}
 
 	err:
 
-	return false;
+	return state;
 }
 
 /**
