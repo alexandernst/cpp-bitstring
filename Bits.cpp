@@ -116,10 +116,18 @@ bool Bits::fromMem(unsigned char *chunk, int64_t size){
 
 /**
  * Unload whatever was loaded (if anything was loaded at all).
- * That means that 'data' will be set to NULL.
+ * That means that 'data' will be set to NULL  and free-ed if possible*.
  * Also, 'position' and 'max_position' will be set to 0.
+ *
+ * If possible means that the data will be free-ed if it was malloc-ed in the
+ * first place (if the data was loaded from a file). If the data was loaded
+ * from a chunk of memory, it won't be free-ed, so take care of it!
  */
 void Bits::unload(){
+	if(this->is_from_file){
+		free(this->data);
+	}
+
 	this->data = NULL;
 	this->position = 0;
 	this->max_position = 0;
