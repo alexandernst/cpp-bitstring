@@ -2,6 +2,7 @@
 #define	BITSTESTS_H
 
 #include <cppunit/extensions/HelperMacros.h>
+#include <openssl/sha.h>
 
 class BitsTests : public CPPUNIT_NS::TestFixture {
 	CPPUNIT_TEST_SUITE(BitsTests);
@@ -23,6 +24,7 @@ class BitsTests : public CPPUNIT_NS::TestFixture {
 	CPPUNIT_TEST(testUnsetBit);
 	CPPUNIT_TEST(testToggleBit);
 
+	CPPUNIT_TEST(testPrintHash);
 	CPPUNIT_TEST(testPrintHex);
 	CPPUNIT_TEST(testPrintBits);
 
@@ -52,6 +54,7 @@ private:
 	void testUnsetBit();
 	void testToggleBit();
 
+	void testPrintHash();
 	void testPrintHex();
 	void testPrintBits();
 

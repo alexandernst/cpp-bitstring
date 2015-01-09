@@ -386,6 +386,26 @@ void BitsTests::testToggleBit(){
 	CPPUNIT_ASSERT(c2 == 0);
 }
 
+void BitsTests::testPrintHash(){
+	unsigned char chunk[] = "This is a test!";
+	int64_t size = sizeof(chunk) - 1;
+
+	Bits bits;
+	bits.fromMem(chunk, size);
+
+	//Capture cout
+	ostringstream out;
+	streambuf *orig_buf(cout.rdbuf(out.rdbuf()));
+
+	bits.printHash();
+
+	//Restore cout
+	cout.rdbuf(orig_buf);
+
+	unsigned int c1 = memcmp(out.str().c_str(), "8b6ccb43dca2040c3cfbcd7bfff0b387d4538c33", SHA_DIGEST_LENGTH);
+	CPPUNIT_ASSERT(c1 == 0);
+}
+
 void BitsTests::testPrintHex(){
 	unsigned char chunk[] = "This is a test!";
 	int64_t size = sizeof(chunk) - 1;
