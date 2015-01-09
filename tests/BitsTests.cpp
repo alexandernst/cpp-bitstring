@@ -19,27 +19,84 @@ void BitsTests::tearDown(){
 }
 
 void BitsTests::testFromFile(){
-    unsigned char chunk[] = "This is a test!";
-    int64_t size = sizeof(chunk) - 1;
+	unsigned char chunk[] = "This is a test!";
+	int64_t size = sizeof(chunk) - 1;
 
-    char tmpfn[L_tmpnam];
-    CPPUNIT_ASSERT(tmpnam(tmpfn) != NULL);
+	char tmpfn[L_tmpnam];
+	CPPUNIT_ASSERT(tmpnam(tmpfn) != NULL);
 
-    ofstream tmpf(tmpfn);
-    CPPUNIT_ASSERT(tmpf.is_open() == true);
-    tmpf << chunk;
-    tmpf.close();
+	ofstream tmpf(tmpfn);
+	CPPUNIT_ASSERT(tmpf.is_open() == true);
+	tmpf << chunk;
+	tmpf.close();
 
-    Bits bits;
-    bool result = bits.fromFile(tmpfn);
-    CPPUNIT_ASSERT(result);
-    CPPUNIT_ASSERT(bits.getMaxPosition() == size);
+	Bits bits;
+	bool result = bits.fromFile(tmpfn);
+	CPPUNIT_ASSERT(result);
+	CPPUNIT_ASSERT(bits.getMaxPosition() == size);
 
-    unsigned char *f2 = bits.read(2);
-    unsigned int c_f2 = memcmp(f2, "Th", 2);
-    CPPUNIT_ASSERT(c_f2 == 0);
+	unsigned char *f2 = bits.read(2);
+	unsigned int c_f2 = memcmp(f2, "Th", 2);
+	CPPUNIT_ASSERT(c_f2 == 0);
 
-    CPPUNIT_ASSERT(remove(tmpfn) == 0);
+	CPPUNIT_ASSERT(remove(tmpfn) == 0);
+}
+
+void BitsTests::testToFile(){
+	unsigned char chunk[] = "This is a test!";
+	int64_t size = sizeof(chunk) - 1;
+
+	char tmpfn[L_tmpnam];
+	CPPUNIT_ASSERT(tmpnam(tmpfn) != NULL);
+
+	Bits bits;
+	bool readFromFile = bits.fromMem(chunk, size);
+	CPPUNIT_ASSERT(readFromFile);
+	CPPUNIT_ASSERT(bits.getMaxPosition() == size);
+
+	bool writeToFile = bits.toFile(tmpfn);
+	CPPUNIT_ASSERT(writeToFile);
+
+	Bits bits2;
+	readFromFile = bits2.fromFile(tmpfn);
+	CPPUNIT_ASSERT(readFromFile);
+	CPPUNIT_ASSERT(bits2.getMaxPosition() == size);
+	CPPUNIT_ASSERT(memcmp(chunk, bits2.getData(), size) == 0);
+
+	writeToFile = bits.toFile(tmpfn, 14, 1);
+	CPPUNIT_ASSERT(writeToFile);
+
+	readFromFile = bits2.fromFile(tmpfn);
+	CPPUNIT_ASSERT(readFromFile);
+	CPPUNIT_ASSERT(bits2.getMaxPosition() == 1);
+	CPPUNIT_ASSERT(memcmp("!", bits2.getData(), 1) == 0);
+
+	writeToFile = bits.toFile(tmpfn, 5, 2);
+	CPPUNIT_ASSERT(writeToFile);
+
+	readFromFile = bits2.fromFile(tmpfn);
+	CPPUNIT_ASSERT(readFromFile);
+	CPPUNIT_ASSERT(bits2.getMaxPosition() == 2);
+	CPPUNIT_ASSERT(memcmp("is", bits2.getData(), 2) == 0);
+
+	writeToFile = bits.toFile(tmpfn, 15);
+	CPPUNIT_ASSERT(writeToFile);
+
+	readFromFile = bits2.fromFile(tmpfn);
+	CPPUNIT_ASSERT(readFromFile);
+	CPPUNIT_ASSERT(bits2.getMaxPosition() == 0);
+
+	writeToFile = bits.toFile(tmpfn, 14, 2);
+	CPPUNIT_ASSERT(!writeToFile);
+
+	writeToFile = bits.toFile(tmpfn, 0, 0);
+	CPPUNIT_ASSERT(writeToFile);
+
+	readFromFile = bits2.fromFile(tmpfn);
+	CPPUNIT_ASSERT(readFromFile);
+	CPPUNIT_ASSERT(bits2.getMaxPosition() == 0);
+
+	CPPUNIT_ASSERT(remove(tmpfn) == 0);
 }
 
 void BitsTests::testFromMem(){

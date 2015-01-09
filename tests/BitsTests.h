@@ -7,6 +7,7 @@ class BitsTests : public CPPUNIT_NS::TestFixture {
 	CPPUNIT_TEST_SUITE(BitsTests);
 
 	CPPUNIT_TEST(testFromFile);
+	CPPUNIT_TEST(testToFile);
 	CPPUNIT_TEST(testFromMem);
 	CPPUNIT_TEST(testUnload);
 	CPPUNIT_TEST(testRead);
@@ -35,6 +36,7 @@ public:
 
 private:
 	void testFromFile();
+	void testToFile();
 	void testFromMem();
 	void testUnload();
 	void testRead();
