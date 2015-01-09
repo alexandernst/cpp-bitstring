@@ -248,8 +248,8 @@ bool Bits::write(unsigned char *chunk, int64_t n, bool patch){
  */
 bool Bits::seek(int64_t n){
 	if(
-			(n >= 0 && this->canMoveForward(n)) ||
-			(n <= 0 && this->canMoveBackwards(n))
+		(n >= 0 && this->canMoveForward(n)) ||
+		(n <= 0 && this->canMoveBackwards(n))
 	){
 		this->position += n;
 		return true;
