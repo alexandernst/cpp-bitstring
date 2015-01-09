@@ -58,7 +58,7 @@ FFLAGS=
 ASFLAGS=
 
 # Link Libraries and Options
-LDLIBSOPTIONS=
+LDLIBSOPTIONS=`pkg-config --libs libcrypto`  
 
 # Build Targets
 .build-conf: ${BUILD_SUBPROJECTS}
@@ -71,7 +71,7 @@ ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/libcpp-bitstring.${CND_DLIB_EXT}: ${O
 ${OBJECTDIR}/Bits.o: Bits.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -std=c++11 -fPIC  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Bits.o Bits.cpp
+	$(COMPILE.cc) -g `pkg-config --cflags libcrypto` -std=c++11  -fPIC  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Bits.o Bits.cpp
 
 # Subprojects
 .build-subprojects:
@@ -86,13 +86,13 @@ ${TESTDIR}/TestFiles/f1: ${TESTDIR}/tests/BitsTests.o ${TESTDIR}/tests/main.o ${
 ${TESTDIR}/tests/BitsTests.o: tests/BitsTests.cpp 
 	${MKDIR} -p ${TESTDIR}/tests
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -I. -I. -I. -std=c++11 `cppunit-config --cflags` -MMD -MP -MF "$@.d" -o ${TESTDIR}/tests/BitsTests.o tests/BitsTests.cpp
+	$(COMPILE.cc) -g -I. -I. -I. `pkg-config --cflags libcrypto` -std=c++11 `cppunit-config --cflags` -MMD -MP -MF "$@.d" -o ${TESTDIR}/tests/BitsTests.o tests/BitsTests.cpp
 
 
 ${TESTDIR}/tests/main.o: tests/main.cpp 
 	${MKDIR} -p ${TESTDIR}/tests
 	${RM} "$@.d"
-	$(COMPILE.cc) -g -I. -I. -I. -std=c++11 `cppunit-config --cflags` -MMD -MP -MF "$@.d" -o ${TESTDIR}/tests/main.o tests/main.cpp
+	$(COMPILE.cc) -g -I. -I. -I. `pkg-config --cflags libcrypto` -std=c++11 `cppunit-config --cflags` -MMD -MP -MF "$@.d" -o ${TESTDIR}/tests/main.o tests/main.cpp
 
 
 ${OBJECTDIR}/Bits_nomain.o: ${OBJECTDIR}/Bits.o Bits.cpp 
@@ -103,7 +103,7 @@ ${OBJECTDIR}/Bits_nomain.o: ${OBJECTDIR}/Bits.o Bits.cpp
 	   (echo "$$NMOUTPUT" | ${GREP} 'T _main$$'); \
 	then  \
 	    ${RM} "$@.d";\
-	    $(COMPILE.cc) -g -std=c++11 -fPIC  -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Bits_nomain.o Bits.cpp;\
+	    $(COMPILE.cc) -g `pkg-config --cflags libcrypto` -std=c++11  -fPIC  -Dmain=__nomain -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Bits_nomain.o Bits.cpp;\
 	else  \
 	    ${CP} ${OBJECTDIR}/Bits.o ${OBJECTDIR}/Bits_nomain.o;\
 	fi
