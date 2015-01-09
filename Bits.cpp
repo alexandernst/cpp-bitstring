@@ -9,6 +9,7 @@ Bits::Bits(){
 	this->data = NULL;
 	this->position = 0;
 	this->max_position = 0;
+	this->hash = NULL;
 }
 
 /**
@@ -143,6 +144,11 @@ void Bits::unload(){
 	this->position = 0;
 	this->max_position = 0;
 	this->is_from_file = false;
+
+	if(this->hash != NULL){
+		free(this->hash);
+		this->hash = NULL;
+	}
 }
 
 /**
@@ -386,12 +392,25 @@ bool Bits::toggleBit(unsigned int bit){
 }
 
 /**
+ * Print a hexadecimal representation of the SHA1 sum of the data holded by the object.
+ */
+void Bits::printHash(){
+	if(this->hash == NULL){
+		this->getHash();
+	}
+
+	for(int64_t i = 0; i < SHA_DIGEST_LENGTH; i++){
+		cout << hex << setfill('0') << setw(2) << (int) *(this->hash + i);
+	}
+}
+
+/**
  * Print N bytes starting from the current position, in a hexadecimal representation.
  * @param n Number of bytes to print.
  */
 void Bits::printHex(int64_t n){
 	for(int64_t i = 0; i < n && this->canMoveForward(); i++){
-		cout << hex << (int) *this->read(1);
+		cout << hex << setfill('0') << setw(2) << (int) *this->read(1);
 	}
 }
 
@@ -419,6 +438,24 @@ unsigned char *Bits::getData(){
  */
 int64_t Bits::getPosition(){
 	return this->position;
+}
+
+/**
+ * Get a SHA1 sum of the data holded by thie object.
+ * @return SHA1 sum.
+ */
+unsigned char *Bits::getHash(){
+	unsigned char *hash;
+
+	hash = (unsigned char*)malloc(SHA_DIGEST_LENGTH);
+	SHA1(this->data, this->max_position, hash);
+	this->hash = hash;
+
+	for(int64_t i = 0; i < SHA_DIGEST_LENGTH; i++){
+		cout << hex << setfill('0') << setw(2) << (int) *(this->hash + i);
+	}
+
+	return hash;
 }
 
 /**

@@ -1,14 +1,19 @@
 #ifndef BITS_H
 #define	BITS_H
 
+#define _LARGEFILE64_SOURCE
+
+#include <ios>
 #include <bitset>
 #include <cstdio>
 #include <cstdint>
 #include <cstring>
 #include <cstdlib>
 #include <fstream>
+#include <iomanip>
 #include <iostream>
 #include <inttypes.h>
+#include <openssl/sha.h>
 
 using namespace std;
 
@@ -48,6 +53,8 @@ class Bits {
 
 		bool toggleBit(unsigned int bit);
 
+		void printHash();
+
 		void printHex(int64_t n);
 
 		void printBits(int64_t n);
@@ -56,6 +63,8 @@ class Bits {
 
 		int64_t getPosition();
 
+		unsigned char *getHash();
+
 		bool setPosition(int64_t pos);
 
 		int64_t getMaxPosition();
@@ -63,7 +72,7 @@ class Bits {
 	private:
 
 		bool is_from_file;
-		unsigned char *data;
+		unsigned char *data, *hash;
 		int64_t position, max_position;
 
 		bool canMoveBackwards(int64_t n = 1);
