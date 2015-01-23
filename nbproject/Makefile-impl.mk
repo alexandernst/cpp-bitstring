@@ -27,11 +27,11 @@ CLEAN_SUBPROJECTS=${CLEAN_SUBPROJECTS_${SUBPROJECTS}}
 PROJECTNAME=cpp-bitstring
 
 # Active Configuration
-DEFAULTCONF=Debug
+DEFAULTCONF=Debug_x86
 CONF=${DEFAULTCONF}
 
 # All Configurations
-ALLCONFS=Debug Release 
+ALLCONFS=Debug_x86 Debug_x64 Release_x86 Release_x64 
 
 
 # build
