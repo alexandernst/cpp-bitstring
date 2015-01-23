@@ -54,7 +54,7 @@ function copyFileToTmpDir
 
 # Setup
 cd "${TOP}"
-mkdir -p ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/package
+mkdir -p ${CND_DISTDIR}/${CND_CONF}/package
 rm -rf ${NBTMPDIR}
 mkdir -p ${NBTMPDIR}
 
@@ -83,10 +83,10 @@ cd "${NBTMPDIR}/.."
 dpkg-deb  --build ${TMPDIRNAME}
 checkReturnCode
 cd "${TOP}"
-mkdir -p  ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/package
-mv ${NBTMPDIR}.deb ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/package/libcpp-bitstring.so.deb
+mkdir -p  ${CND_DISTDIR}/${CND_CONF}/package
+mv ${NBTMPDIR}.deb ${CND_DISTDIR}/${CND_CONF}/package/libcpp-bitstring.so.deb
 checkReturnCode
-echo Debian: ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/package/libcpp-bitstring.so.deb
+echo Debian: ${CND_DISTDIR}/${CND_CONF}/package/libcpp-bitstring.so.deb
 
 # Cleanup
 cd "${TOP}"
