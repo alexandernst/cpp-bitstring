@@ -13,5 +13,16 @@ install:
 
 script:
     - if [ `getconf LONG_BIT` -eq 64 ]; then impl="Release_x64"; else impl="Release_86"; fi
-    - make CONF=$impl
-    - make test CONF=$impl 2>&1 | if [ `grep "Failures" | wc -l` -ne 0 ]; then exit 1 ; else exit 0 ; fi
+    - make CONF=${impl}
+    - make test CONF=${impl} 2>&1 | if [ `grep "Failures" | wc -l` -ne 0 ]; then exit 1; else exit 0 ; fi
+    - ./nbproject/Package-${impl}.bash
+    - ls -laR dist
+
+deploy:
+    provider: releases
+    api_key:
+        secure: g9jmOw9wYkPDlXJY42YYHaiN3VEmKgQWWHifGn2CP0yHVYfmYL2XUAh1mOG2dAO+2wTcyziD2steHMe3KVzh/uvutTZJTcPOkGS9xISLBTEHUvdAOC4s5AWIE15zlGZWKRKs0UUg9zKiuK8B1siMBe8uyA+tir3UzlgIG4S2zXc=
+    file: ''
+    skip_cleanup: true
+    on:
+        repo: alexandernst/cpp-bitstring
