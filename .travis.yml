@@ -15,8 +15,8 @@ script:
     - if [ `getconf LONG_BIT` -eq 64 ]; then impl="Release_x64"; else impl="Release_86"; fi
     - make CONF=${impl}
     - make test CONF=${impl} 2>&1 | if [ `grep "Failures" | wc -l` -ne 0 ]; then exit 1; else exit 0 ; fi
-    - ./nbproject/Package-${impl}.bash
-    - ls -laR dist
+
+before_deploy: "./nbproject/Package-${impl}.bash"
 
 deploy:
     provider: releases
