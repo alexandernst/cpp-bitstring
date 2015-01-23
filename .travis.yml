@@ -22,7 +22,7 @@ deploy:
     provider: releases
     api_key:
         secure: g9jmOw9wYkPDlXJY42YYHaiN3VEmKgQWWHifGn2CP0yHVYfmYL2XUAh1mOG2dAO+2wTcyziD2steHMe3KVzh/uvutTZJTcPOkGS9xISLBTEHUvdAOC4s5AWIE15zlGZWKRKs0UUg9zKiuK8B1siMBe8uyA+tir3UzlgIG4S2zXc=
-    file: ''
+    file: 'dist/${impl}/package/libcpp-bitstring.so.deb'
     skip_cleanup: true
     on:
         repo: alexandernst/cpp-bitstring
