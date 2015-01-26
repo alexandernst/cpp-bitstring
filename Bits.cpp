@@ -10,6 +10,7 @@ Bits::Bits(){
 	this->position = 0;
 	this->max_position = 0;
 	this->hash = NULL;
+	this->error = false;
 }
 
 /**
@@ -59,11 +60,13 @@ bool Bits::checkIfError(){
  * @return True if data was successfully readen, otherwise false.
  */
 bool Bits::fromFile(char *fname, ios_base::openmode mode){
+	this->unsetError();
 	bool state = false;
 	streampos size;
 	ifstream file;
 
 	if(fname == NULL){
+		this->setError();
 		goto err;
 	}
 
@@ -73,11 +76,13 @@ bool Bits::fromFile(char *fname, ios_base::openmode mode){
 		size = file.tellg();
 
 		if(size == -1){
+			this->setError();
 			goto err;
 		}
 
 		this->data = (unsigned char *)malloc(size);
 		if(this->data == NULL){
+			this->setError();
 			goto err;
 		}
 
@@ -106,14 +111,17 @@ bool Bits::fromFile(char *fname, ios_base::openmode mode){
  * @return True if data was successfully written, otherwise false.
  */
 bool Bits::toFile(char *fname, int64_t offset, int64_t size, ios_base::openmode mode){
+	this->unsetError();
 	bool state = false;
 	ofstream file;
 
 	if(fname == NULL){
+		this->setError();
 		goto err;
 	}
 
 	if(offset > this->max_position || offset < 0){
+		this->setError();
 		goto err;
 	}
 
@@ -124,6 +132,7 @@ bool Bits::toFile(char *fname, int64_t offset, int64_t size, ios_base::openmode 
 	}
 
 	if(this->max_position < offset + size){
+		this->setError();
 		goto err;
 	}
 
@@ -148,7 +157,9 @@ bool Bits::toFile(char *fname, int64_t offset, int64_t size, ios_base::openmode 
  * @return True on success, false otherwise.
  */
 bool Bits::fromMem(unsigned char *chunk, int64_t size){
+	this->unsetError();
 	if(chunk == NULL){
+		this->setError();
 		return false;
 	}else{
 		this->data = chunk;
@@ -169,6 +180,7 @@ bool Bits::fromMem(unsigned char *chunk, int64_t size){
  * from a chunk of memory, it won't be free-ed, so take care of it!
  */
 void Bits::unload(){
+	this->unsetError();
 	if(this->is_from_file){
 		free(this->data);
 	}
@@ -192,13 +204,16 @@ void Bits::unload(){
  * @return The data that was readen or NULL if something failed.
  */
 unsigned char *Bits::read(int64_t n, bool reverse){
+	this->unsetError();
 	if(!this->canMoveForward(n)){
+		this->setError();
 		return NULL;
 	}
 
 	unsigned char *tmp = (unsigned char *) malloc(n);
 
 	if(!tmp){
+		this->setError();
 		return NULL;
 	}
 
@@ -224,7 +239,9 @@ unsigned char *Bits::read(int64_t n, bool reverse){
  * @return The data that was readen or NULL if something failed.
  */
 unsigned char *Bits::peek(int64_t n, bool reverse){
+	this->unsetError();
 	if(!this->canMoveForward(n)){
+		this->setError();
 		return NULL;
 	}
 
@@ -244,6 +261,7 @@ unsigned char *Bits::peek(int64_t n, bool reverse){
  * @return True on success, false otherwise.
  */
 bool Bits::write(unsigned char *chunk, int64_t n, bool patch){
+	this->unsetError();
 	if(patch && this->canMoveForward(n)){
 
 		memcpy(this->data + this->position, chunk, n);
@@ -270,6 +288,7 @@ bool Bits::write(unsigned char *chunk, int64_t n, bool patch){
 
 	}else{
 
+		this->setError();
 		return false;
 
 	}
@@ -286,6 +305,7 @@ bool Bits::write(unsigned char *chunk, int64_t n, bool patch){
  * @return True is the operation was successful, false otherwise.
  */
 bool Bits::seek(int64_t n){
+	this->unsetError();
 	if(
 		(n >= 0 && this->canMoveForward(n)) ||
 		(n <= 0 && this->canMoveBackwards(n))
@@ -293,6 +313,7 @@ bool Bits::seek(int64_t n){
 		this->position += n;
 		return true;
 	}else{
+		this->setError();
 		return false;
 	}
 }
@@ -305,6 +326,7 @@ bool Bits::seek(int64_t n){
  * @return Position/offset or -1 if nothing was found.
  */
 int64_t Bits::findPrevious(unsigned char *pattern, int64_t n){
+	this->unsetError();
 	int64_t res = -1, tmppos = this->position;
 
 	while(this->canMoveBackwards()){;
@@ -337,6 +359,7 @@ int64_t Bits::findPrevious(unsigned char *pattern, int64_t n){
  * @return Position/offset or -1 if nothing was found.
  */
 int64_t Bits::findNext(unsigned char *pattern, int64_t n){
+	this->unsetError();
 	int64_t res = -1, tmppos = this->position;
 
 	while(this->canMoveForward(n)){
@@ -361,7 +384,9 @@ int64_t Bits::findNext(unsigned char *pattern, int64_t n){
  * @return True if the bit is set, false otherwise.
  */
 bool Bits::testBit(unsigned int bit){
+	this->unsetError();
 	if(!this->canMoveForward() || bit > 7){
+		this->setError();
 		return false;
 	}
 
@@ -377,7 +402,9 @@ bool Bits::testBit(unsigned int bit){
  * @return True if the bit was set successfully.
  */
 bool Bits::setBit(unsigned int bit){
+	this->unsetError();
 	if(!this->canMoveForward() || bit > 7){
+		this->setError();
 		return false;
 	}
 
@@ -397,7 +424,9 @@ bool Bits::setBit(unsigned int bit){
  * @return True if the bit was set successfully.
  */
 bool Bits::unsetBit(unsigned int bit){
+	this->unsetError();
 	if(!this->canMoveForward() || bit > 7){
+		this->setError();
 		return false;
 	}
 
@@ -417,10 +446,14 @@ bool Bits::unsetBit(unsigned int bit){
  * @return True if the bit was set successfully.
  */
 bool Bits::toggleBit(unsigned int bit){
-	if(this->testBit(bit)){
+	this->unsetError();
+	if(this->testBit(bit) && !this->checkIfError()){
 		return this->unsetBit(bit);
-	}else{
+	}else if(!this->checkIfError()){
 		return this->setBit(bit);
+	}else{
+		this->setError();
+		return false;
 	}
 }
 
@@ -428,6 +461,7 @@ bool Bits::toggleBit(unsigned int bit){
  * Print a hexadecimal representation of the SHA1 sum of the data holded by the object.
  */
 void Bits::printHash(){
+	this->unsetError();
 	if(this->hash == NULL){
 		this->getHash();
 	}
@@ -442,6 +476,7 @@ void Bits::printHash(){
  * @param n Number of bytes to print.
  */
 void Bits::printHex(int64_t n){
+	this->unsetError();
 	for(int64_t i = 0; i < n && this->canMoveForward(); i++){
 		cout << hex << setfill('0') << setw(2) << (int) *this->read(1);
 	}
@@ -452,6 +487,7 @@ void Bits::printHex(int64_t n){
  * @param n Number of bytes to print.
  */
 void Bits::printBits(int64_t n){
+	this->unsetError();
 	for(int64_t i = 0; i < n && this->canMoveForward(); i++){
 		cout << bitset<8>(*this->read(1));
 	}
@@ -462,6 +498,7 @@ void Bits::printBits(int64_t n){
  * @return A pointer to the data managed by Bits.
  */
 unsigned char *Bits::getData(){
+	this->unsetError();
 	return this->data;
 }
 
@@ -470,6 +507,7 @@ unsigned char *Bits::getData(){
  * @return The current position.
  */
 int64_t Bits::getPosition(){
+	this->unsetError();
 	return this->position;
 }
 
@@ -478,6 +516,7 @@ int64_t Bits::getPosition(){
  * @return SHA1 sum.
  */
 unsigned char *Bits::getHash(){
+	this->unsetError();
 	unsigned char *hash;
 
 	hash = (unsigned char*)malloc(SHA_DIGEST_LENGTH);
@@ -496,10 +535,12 @@ unsigned char *Bits::getHash(){
  * @param pos The position that is desired.
  */
 bool Bits::setPosition(int64_t pos){
+	this->unsetError();
 	if(this->max_position >= pos){
 		this->position = pos;
 		return true;
 	}else{
+		this->setError();
 		return false;
 	}
 }
@@ -509,19 +550,20 @@ bool Bits::setPosition(int64_t pos){
  * @return The maximum position we can go.
  */
 int64_t Bits::getMaxPosition(){
+	this->unsetError();
 	return this->max_position;
 }
 
-/******************************************************************************/
-
-bool Bits::canMoveBackwards(int64_t n){
-	if(this->position == 0 || this->position < n){
-		return false;
-	}
-
-	return (this->position + n) >= 0;
+/**
+ * Set internal error flag to true.
+ */
+void Bits::setError(){
+	this->error = true;
 }
 
-bool Bits::canMoveForward(int64_t n){
-	return (this->position + n) <= this->max_position;
+/**
+ * Set internal error flag to false.
+ */
+void Bits::unsetError(){
+	this->error = false;
 }
