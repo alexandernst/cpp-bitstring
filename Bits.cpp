@@ -20,6 +20,39 @@ Bits::~Bits(){
 }
 
 /**
+ * Check if the cursor can go back more than N bytes.
+ * @param n Bytes to move backwards
+ * @return True if possible, false otherways.
+ */
+bool Bits::canMoveBackwards(int64_t n){
+	this->unsetError();
+	if(this->position == 0 || this->position < n){
+		return false;
+	}
+
+	return (this->position + n) >= 0;
+}
+
+/**
+ * Check if the cursor can go forward more than N bytes.
+ * @param n Bytes to move forward.
+ * @return True if possible, false otherways.
+ */
+bool Bits::canMoveForward(int64_t n){
+	this->unsetError();
+	return (this->position + n) <= this->max_position;
+}
+
+/**
+ * Check if the previous call to a method in this object failed.
+ * Note that calling this method multiple times won't affect the error state.
+ * @return
+ */
+bool Bits::checkIfError(){
+	return this->error;
+}
+
+/**
  * Read data from file.
  * @param fname The path/name of the file.
  * @param mode Optional, open mode. Default is "rb".
