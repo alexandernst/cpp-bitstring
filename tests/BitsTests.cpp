@@ -160,6 +160,97 @@ void BitsTests::testRead(){
 	CPPUNIT_ASSERT(bits.getPosition() == 7);
 }
 
+void BitsTests::testRead_uint8(){
+	unsigned char chunk[] = "Th\0is is a test!";
+	int64_t size = sizeof(chunk) - 1;
+
+	Bits bits;
+	bits.fromMem(chunk, size);
+
+	uint8_t i = bits.read_uint8();
+	CPPUNIT_ASSERT(i == 84 && bits.checkIfError() == false);
+
+	i = bits.read_uint8();
+	CPPUNIT_ASSERT(i == 104 && bits.checkIfError() == false);
+
+	i = bits.read_uint8();
+	CPPUNIT_ASSERT(i == 0 && bits.checkIfError() == false);
+
+	bits.seek(12);
+
+	i = bits.read_uint8();
+	CPPUNIT_ASSERT(i == 33 && bits.checkIfError() == false);
+
+	i = bits.read_uint8();
+	CPPUNIT_ASSERT(i == 0 && bits.checkIfError() == true);
+}
+
+void BitsTests::testRead_uint16(){
+	unsigned char chunk[] = "Th\0\0is is a test!";
+	int64_t size = sizeof(chunk) - 1;
+
+	Bits bits;
+	bits.fromMem(chunk, size);
+
+	uint16_t i = bits.read_uint16();
+	CPPUNIT_ASSERT(i == 21608 && bits.checkIfError() == false);
+
+	i = bits.read_uint16();
+	CPPUNIT_ASSERT(i == 0 && bits.checkIfError() == false);
+
+	bits.seek(11);
+
+	i = bits.read_uint16();
+	CPPUNIT_ASSERT(i == 29729 && bits.checkIfError() == false);
+
+	i = bits.read_uint16();
+	CPPUNIT_ASSERT(i == 0 && bits.checkIfError() == true);
+}
+
+void BitsTests::testRead_uint32(){
+	unsigned char chunk[] = "This\0\0\0\0 is a test!";
+	int64_t size = sizeof(chunk) - 1;
+
+	Bits bits;
+	bits.fromMem(chunk, size);
+
+	uint32_t i = bits.read_uint32();
+	CPPUNIT_ASSERT(i == 1416128883 && bits.checkIfError() == false);
+
+	i = bits.read_uint32();
+	CPPUNIT_ASSERT(i == 0 && bits.checkIfError() == false);
+
+	bits.seek(7);
+
+	i = bits.read_uint32();
+	CPPUNIT_ASSERT(i == 1702065185 && bits.checkIfError() == false);
+
+	i = bits.read_uint32();
+	CPPUNIT_ASSERT(i == 0 && bits.checkIfError() == true);
+}
+
+void BitsTests::testRead_uint64(){
+	unsigned char chunk[] = "This is \0\0\0\0\0\0\0\0a very big test!";
+	int64_t size = sizeof(chunk) - 1;
+
+	Bits bits;
+	bits.fromMem(chunk, size);
+
+	uint64_t i = bits.read_uint64(); // "This is " == {0x54, 0x68, 0x69, 0x73, 0x20, 0x69, 0x73, 0x20}
+	CPPUNIT_ASSERT( memcmp((unsigned char *)&i, "\x20\x73\x69\x20\x73\x69\x68\x54", 8) == 0 && bits.checkIfError() == false);
+
+	i = bits.read_uint64();
+	CPPUNIT_ASSERT(i == 0 && bits.checkIfError() == false);
+
+	bits.seek(8);
+
+	i = bits.read_uint64(); // "ig test!" == {0x69, 0x67, 0x20, 0x74, 0x65, 0x73, 0x74, 0x21}
+	CPPUNIT_ASSERT( memcmp((unsigned char *)&i, "\x21\x74\x73\x65\x74\x20\x67\x69", 8) == 0 && bits.checkIfError() == false);
+
+	i = bits.read_uint64();
+	CPPUNIT_ASSERT(i == 0 && bits.checkIfError() == true);
+}
+
 void BitsTests::testPeek(){
 	unsigned char chunk[] = "This is a test!";
 	int64_t size = sizeof(chunk) - 1;
