@@ -25,6 +25,12 @@ class Bits {
 
 		virtual ~Bits();
 
+		bool canMoveBackwards(int64_t n = 1);
+
+		bool canMoveForward(int64_t n = 1);
+
+		bool checkIfError();
+
 		bool fromFile(char *fname = NULL, ios_base::openmode mode = ios::in | ios::binary);
 
 		bool toFile(char *fname = NULL, int64_t offset = 0, int64_t size = -1, ios_base::openmode mode = ios::out | ios::binary | ios::trunc);
@@ -34,6 +40,14 @@ class Bits {
 		void unload();
 
 		unsigned char *read(int64_t n, bool reverse = false);
+
+		uint8_t read_uint8();
+
+		uint16_t read_uint16(bool reverse = false);
+
+		uint32_t read_uint32(bool reverse = false);
+
+		uint64_t read_uint64(bool reverse = false);
 
 		unsigned char *peek(int64_t n, bool reverse = false);
 
@@ -71,13 +85,12 @@ class Bits {
 
 	private:
 
-		bool is_from_file;
+		bool is_from_file, error;
 		unsigned char *data, *hash;
 		int64_t position, max_position;
 
-		bool canMoveBackwards(int64_t n = 1);
-
-		bool canMoveForward(int64_t n = 1);
+		void unsetError();
+		void setError();
 
 };
 

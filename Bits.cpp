@@ -233,6 +233,80 @@ unsigned char *Bits::read(int64_t n, bool reverse){
 }
 
 /**
+ * Read 8 bits into an uint8_t
+ * @return A uint8_t filled with 1 byte of data or NULL if something failed. Cursor is moved 1 position.
+ */
+uint8_t Bits::read_uint8(){
+	this->unsetError();
+	unsigned char *c = this->read(1);
+	uint8_t i = 0;
+
+	if(c != NULL){
+		i = (uint8_t)c[0];
+	}else{
+		this->setError();
+	}
+
+	return i;
+}
+
+/**
+ * Read 16 bits into an uint16_t
+ * @param reverse Read the data starting from the last byte.
+ * @return A uint16_t filled with 2 bytes of data or NULL if something failed. Cursor is moved 2 positions forward (or backward if reverse is true).
+ */
+uint16_t Bits::read_uint16(bool reverse){
+	this->unsetError();
+	unsigned char *c = this->read(2, reverse);
+	uint16_t i = 0;
+
+	if(c != NULL){
+		i = (uint16_t)c[1] | ((uint16_t)c[0] << 8);
+	}else{
+		this->setError();
+	}
+
+	return i;
+}
+
+/**
+ * Read 32 bits into an uint32_t
+ * @param reverse Read the data starting from the last byte.
+ * @return A uint32_t filled with 4 bytes of data or NULL if something failed. Cursor is moved 4 positions forward (or backward if reverse is true).
+ */
+uint32_t Bits::read_uint32(bool reverse){
+	this->unsetError();
+	unsigned char *c = this->read(4, reverse);
+	uint32_t i = 0;
+
+	if(c != NULL){
+		i = (uint32_t)c[3] | ((uint32_t)c[2] << 8) | ((uint32_t)c[1] << 16) | ((uint32_t)c[0] << 24);
+	}else{
+		this->setError();
+	}
+
+	return i;
+}
+
+/**
+ * Read 64 bits into an uint64_t
+ * @param reverse Read the data starting from the last byte.
+ * @return A uint64_t filled with 8 bytes of data or NULL if something failed. Cursor is moved 8 positions forward (or backward if reverse is true).
+ */
+uint64_t Bits::read_uint64(bool reverse){
+	this->unsetError();
+	unsigned char *c = this->read(8, reverse);
+	uint64_t i = 0;
+
+	if(c != NULL){
+		i = (uint64_t)c[7] | ((uint64_t)c[6] << 8) | ((uint64_t)c[5] << 16) | ((uint64_t)c[4] << 24) | ((uint64_t)c[3] << 32) | ((uint64_t)c[2] << 40) | ((uint64_t)c[1] << 48) | ((uint64_t)c[0] << 56);
+	}else{
+		this->setError();
+	}
+	return i;
+}
+
+/**
  * Read N bytes starting from the current position of the data, without changing the position.
  * @param n Number of bytes to read.
  * @param reverse If set to true (default is false) the data will be returned byte-reversed.
