@@ -80,7 +80,7 @@ bool Bits::fromFile(char *fname, ios_base::openmode mode){
 			goto err;
 		}
 
-		this->data = (unsigned char *)malloc(size);
+		this->data = (unsigned char *) malloc(size);
 		if(this->data == NULL){
 			this->setError();
 			goto err;
@@ -91,7 +91,7 @@ bool Bits::fromFile(char *fname, ios_base::openmode mode){
 		this->is_from_file = true;
 
 		file.seekg(0, ios::beg);
-		file.read((char *)data, size);
+		file.read((char *) data, size);
 		file.close();
 
 		state = true;
@@ -137,12 +137,13 @@ bool Bits::toFile(char *fname, uint64_t offset, uint64_t size, ios_base::openmod
 	}
 
 	file.open(fname, mode);
-	file.seekp(0, ios::beg);
-
 	if(file.is_open()){
-		file.write((const char *)this->data + offset, size);
+		file.seekp(0, ios::beg);
+		file.write((const char *) this->data + offset, size);
 		file.close();
 		state = true;
+	}else{
+		goto err;
 	}
 
 	err:
@@ -242,7 +243,7 @@ uint8_t Bits::read_uint8(){
 	uint8_t i = 0;
 
 	if(c != NULL){
-		i = (uint8_t)c[0];
+		i = (uint8_t) c[0];
 	}else{
 		this->setError();
 	}
@@ -261,7 +262,7 @@ uint16_t Bits::read_uint16(bool reverse){
 	uint16_t i = 0;
 
 	if(c != NULL){
-		i = (uint16_t)c[1] | ((uint16_t)c[0] << 8);
+		i = (uint16_t) c[1] | ((uint16_t) c[0] << 8);
 	}else{
 		this->setError();
 	}
@@ -280,7 +281,7 @@ uint32_t Bits::read_uint32(bool reverse){
 	uint32_t i = 0;
 
 	if(c != NULL){
-		i = (uint32_t)c[3] | ((uint32_t)c[2] << 8) | ((uint32_t)c[1] << 16) | ((uint32_t)c[0] << 24);
+		i = (uint32_t) c[3] | ((uint32_t) c[2] << 8) | ((uint32_t) c[1] << 16) | ((uint32_t) c[0] << 24);
 	}else{
 		this->setError();
 	}
@@ -299,7 +300,7 @@ uint64_t Bits::read_uint64(bool reverse){
 	uint64_t i = 0;
 
 	if(c != NULL){
-		i = (uint64_t)c[7] | ((uint64_t)c[6] << 8) | ((uint64_t)c[5] << 16) | ((uint64_t)c[4] << 24) | ((uint64_t)c[3] << 32) | ((uint64_t)c[2] << 40) | ((uint64_t)c[1] << 48) | ((uint64_t)c[0] << 56);
+		i = (uint64_t) c[7] | ((uint64_t) c[6] << 8) | ((uint64_t) c[5] << 16) | ((uint64_t) c[4] << 24) | ((uint64_t) c[3] << 32) | ((uint64_t) c[2] << 40) | ((uint64_t) c[1] << 48) | ((uint64_t) c[0] << 56);
 	}else{
 		this->setError();
 	}
@@ -342,7 +343,7 @@ bool Bits::write(unsigned char *chunk, uint64_t n, bool patch){
 
 	}else if(!patch){
 
-		unsigned char *newdata = (unsigned char*)malloc(this->max_position + n);
+		unsigned char *newdata = (unsigned char *) malloc(this->max_position + n);
 
 		//Copy from position 0 to current position
 		memcpy(newdata, this->data, this->position);
