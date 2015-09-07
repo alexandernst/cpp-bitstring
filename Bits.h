@@ -1,7 +1,9 @@
 #ifndef BITS_H
 #define	BITS_H
 
+#ifndef _LARGEFILE64_SOURCE
 #define _LARGEFILE64_SOURCE
+#endif
 
 #include <ios>
 #include <bitset>
