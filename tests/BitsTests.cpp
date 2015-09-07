@@ -149,7 +149,7 @@ void BitsTests::testRead(){
 	unsigned int c_n5 = memcmp(n5, "!tset", 5);
 	CPPUNIT_ASSERT(c_n5 == 0);
 
-	bool s2 = bits.seek(-10);
+	bool s2 = bits.seek(10, true);
 	CPPUNIT_ASSERT(s2);
 
 	unsigned char *n2 = bits.read(2, true);
@@ -309,20 +309,20 @@ void BitsTests::testSeek(){
 	unsigned char *n1 = bits.read(1);
 	CPPUNIT_ASSERT(n1 == NULL);
 
-	bool s3 = bits.seek(-2);
+	bool s3 = bits.seek(2, true);
 	CPPUNIT_ASSERT(s3);
 
 	unsigned char *p2 = bits.read(2);
 	unsigned int c_p2 = memcmp(p2, "t!", 2);
 	CPPUNIT_ASSERT(c_p2 == 0);
 
-	bool s4 = bits.seek(-15);
+	bool s4 = bits.seek(15, true);
 	CPPUNIT_ASSERT(s4);
 
 	bool s5 = bits.seek(1);
 	CPPUNIT_ASSERT(s5);
 
-	bool s6 = bits.seek(-2);
+	bool s6 = bits.seek(2, true);
 	CPPUNIT_ASSERT(s6 == false);
 }
 
@@ -353,8 +353,8 @@ void BitsTests::testFindPrevious(){
 
 	bits.setPosition(0);
 
-	int64_t p5 = bits.findPrevious((unsigned char *) "T", 1);
-	CPPUNIT_ASSERT(p5 == -1);
+	uint64_t p5 = bits.findPrevious((unsigned char *) "T", 1);
+	CPPUNIT_ASSERT(p5 == 0 && bits.checkIfError() == true);
 }
 
 void BitsTests::testFindNext(){
@@ -377,8 +377,8 @@ void BitsTests::testFindNext(){
 
 	bits.setPosition(bits.getMaxPosition());
 
-	int64_t p4 = bits.findNext((unsigned char *) "?", 1);
-	CPPUNIT_ASSERT(p4 == -1);
+	uint64_t p4 = bits.findNext((unsigned char *) "?", 1);
+	CPPUNIT_ASSERT(p4 == 0 && bits.checkIfError() == true);
 }
 
 void BitsTests::testBit(){
