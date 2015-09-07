@@ -6,6 +6,7 @@
 #endif
 
 #include <ios>
+#include <cmath>
 #include <bitset>
 #include <cstdio>
 #include <cstdint>
@@ -14,7 +15,7 @@
 #include <fstream>
 #include <iomanip>
 #include <iostream>
-#include <inttypes.h>
+#include <cinttypes>
 #include <openssl/sha.h>
 
 using namespace std;
