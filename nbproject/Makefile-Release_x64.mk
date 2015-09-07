@@ -49,7 +49,7 @@ CFLAGS=
 
 # CC Compiler Flags
 CCFLAGS=-m64
-CXXFLAGS=-m64
+CXXFLAGS=-m64 -fdiagnostics-color
 
 # Fortran Compiler Flags
 FFLAGS=
@@ -58,7 +58,7 @@ FFLAGS=
 ASFLAGS=
 
 # Link Libraries and Options
-LDLIBSOPTIONS=`pkg-config --libs libcrypto`  
+LDLIBSOPTIONS=`pkg-config --libs libcrypto`
 
 # Build Targets
 .build-conf: ${BUILD_SUBPROJECTS}
@@ -68,7 +68,7 @@ ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/libcpp-bitstring.${CND_DLIB_EXT}: ${O
 	${MKDIR} -p ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}
 	${LINK.cc} -o ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/libcpp-bitstring.${CND_DLIB_EXT} ${OBJECTFILES} ${LDLIBSOPTIONS} -shared -fPIC
 
-${OBJECTDIR}/Bits.o: Bits.cpp 
+${OBJECTDIR}/Bits.o: Bits.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
 	$(COMPILE.cc) -O2 `pkg-config --cflags libcrypto` -std=c++11  -fPIC  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Bits.o Bits.cpp
@@ -80,22 +80,22 @@ ${OBJECTDIR}/Bits.o: Bits.cpp
 .build-tests-conf: .build-conf ${TESTFILES}
 ${TESTDIR}/TestFiles/f1: ${TESTDIR}/tests/BitsTests.o ${TESTDIR}/tests/main.o ${OBJECTFILES:%.o=%_nomain.o}
 	${MKDIR} -p ${TESTDIR}/TestFiles
-	${LINK.cc}   -o ${TESTDIR}/TestFiles/f1 $^ ${LDLIBSOPTIONS} `cppunit-config --libs` `cppunit-config --libs` `cppunit-config --libs` `cppunit-config --libs`   
+	${LINK.cc}   -o ${TESTDIR}/TestFiles/f1 $^ ${LDLIBSOPTIONS} `cppunit-config --libs` `cppunit-config --libs` `cppunit-config --libs` `cppunit-config --libs`
 
 
-${TESTDIR}/tests/BitsTests.o: tests/BitsTests.cpp 
+${TESTDIR}/tests/BitsTests.o: tests/BitsTests.cpp
 	${MKDIR} -p ${TESTDIR}/tests
 	${RM} "$@.d"
 	$(COMPILE.cc) -O2 -I. -I. -I. `pkg-config --cflags libcrypto` -std=c++11 `cppunit-config --cflags` -MMD -MP -MF "$@.d" -o ${TESTDIR}/tests/BitsTests.o tests/BitsTests.cpp
 
 
-${TESTDIR}/tests/main.o: tests/main.cpp 
+${TESTDIR}/tests/main.o: tests/main.cpp
 	${MKDIR} -p ${TESTDIR}/tests
 	${RM} "$@.d"
 	$(COMPILE.cc) -O2 -I. -I. -I. `pkg-config --cflags libcrypto` -std=c++11 `cppunit-config --cflags` -MMD -MP -MF "$@.d" -o ${TESTDIR}/tests/main.o tests/main.cpp
 
 
-${OBJECTDIR}/Bits_nomain.o: ${OBJECTDIR}/Bits.o Bits.cpp 
+${OBJECTDIR}/Bits_nomain.o: ${OBJECTDIR}/Bits.o Bits.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	@NMOUTPUT=`${NM} ${OBJECTDIR}/Bits.o`; \
 	if (echo "$$NMOUTPUT" | ${GREP} '|main$$') || \

@@ -1,6 +1,6 @@
-# 
-# Generated Makefile - do not edit! 
-# 
+#
+# Generated Makefile - do not edit!
+#
 # Edit the Makefile in the project folder instead (../Makefile). Each target
 # has a pre- and a post- target defined where you can add customization code.
 #
@@ -27,11 +27,11 @@ CLEAN_SUBPROJECTS=${CLEAN_SUBPROJECTS_${SUBPROJECTS}}
 PROJECTNAME=cpp-bitstring
 
 # Active Configuration
-DEFAULTCONF=Debug_x86
+DEFAULTCONF=Debug_x64
 CONF=${DEFAULTCONF}
 
 # All Configurations
-ALLCONFS=Debug_x86 Debug_x64 Release_x86 Release_x64 
+ALLCONFS=Debug_x86 Debug_x64 Release_x86 Release_x64
 
 
 # build
@@ -46,7 +46,7 @@ ALLCONFS=Debug_x86 Debug_x64 Release_x86 Release_x64
 	"${MAKE}" -f nbproject/Makefile-${CONF}.mk QMAKE=${QMAKE} SUBPROJECTS=${SUBPROJECTS} .clean-conf
 
 
-# clobber 
+# clobber
 .clobber-impl: .clobber-pre .depcheck-impl
 	@#echo "=> Running $@..."
 	for CONF in ${ALLCONFS}; \
@@ -54,7 +54,7 @@ ALLCONFS=Debug_x86 Debug_x64 Release_x86 Release_x64
 	    "${MAKE}" -f nbproject/Makefile-$${CONF}.mk QMAKE=${QMAKE} SUBPROJECTS=${SUBPROJECTS} .clean-conf; \
 	done
 
-# all 
+# all
 .all-impl: .all-pre .depcheck-impl
 	@#echo "=> Running $@..."
 	for CONF in ${ALLCONFS}; \
@@ -130,4 +130,3 @@ ALLCONFS=Debug_x86 Debug_x64 Release_x86 Release_x64
 	@echo "    also build subprojects."
 	@echo "Target 'help' prints this message."
 	@echo ""
-
