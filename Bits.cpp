@@ -23,9 +23,9 @@ Bits::~Bits(){
 /**
  * Check if the cursor can go back more than N bytes.
  * @param n Bytes to move backwards
- * @return True if possible, false otherways.
+ * @return True if possible, false otherwise.
  */
-bool Bits::canMoveBackwards(int64_t n){
+bool Bits::canMoveBackwards(uint64_t n){
 	this->unsetError();
 	if(this->position == 0 || this->position < n){
 		return false;
@@ -37,9 +37,9 @@ bool Bits::canMoveBackwards(int64_t n){
 /**
  * Check if the cursor can go forward more than N bytes.
  * @param n Bytes to move forward.
- * @return True if possible, false otherways.
+ * @return True if possible, false otherwise.
  */
-bool Bits::canMoveForward(int64_t n){
+bool Bits::canMoveForward(uint64_t n){
 	this->unsetError();
 	return (this->position + n) <= this->max_position;
 }
@@ -103,14 +103,14 @@ bool Bits::fromFile(char *fname, ios_base::openmode mode){
 }
 
 /**
- * Write data to file.
+ * Write data to file. The cursor won't be moved.
  * @param fname The path/name of the file.
  * @param offset An offset from which should start the dumping. Default is 0.
  * @param size The size (in bytes) of the data to be written. Default is the length of the data holded by the object, if offset is 0, otherwise it will be calculated if not passed.
  * @param mode Optional, open mode. Default is "wb".
  * @return True if data was successfully written, otherwise false.
  */
-bool Bits::toFile(char *fname, int64_t offset, int64_t size, ios_base::openmode mode){
+bool Bits::toFile(char *fname, uint64_t offset, uint64_t size, ios_base::openmode mode){
 	this->unsetError();
 	bool state = false;
 	ofstream file;
@@ -156,7 +156,7 @@ bool Bits::toFile(char *fname, int64_t offset, int64_t size, ios_base::openmode 
  * @param size Number of bytes to load.
  * @return True on success, false otherwise.
  */
-bool Bits::fromMem(unsigned char *chunk, int64_t size){
+bool Bits::fromMem(unsigned char *chunk, uint64_t size){
 	this->unsetError();
 	if(chunk == NULL){
 		this->setError();
@@ -203,7 +203,7 @@ void Bits::unload(){
  * @param reverse If set to true (default is false) the data will be returned byte-reversed.
  * @return The data that was readen or NULL if something failed.
  */
-unsigned char *Bits::read(int64_t n, bool reverse){
+unsigned char *Bits::read(uint64_t n, bool reverse){
 	this->unsetError();
 	if(!this->canMoveForward(n)){
 		this->setError();
@@ -218,12 +218,12 @@ unsigned char *Bits::read(int64_t n, bool reverse){
 	}
 
 	if(reverse){
-		for(int64_t i = n - 1; i >= 0; i--){
-			tmp[n - (i + 1)] = this->data[this->position + i];
+		for(uint64_t i = n; i > 0; i--){
+			tmp[n - i] = this->data[this->position + i - 1];
 		}
 		this->position += n;
 	}else{
-		for(int64_t i = 0; i < n; i++){
+		for(uint64_t i = 0; i < n; i++){
 			tmp[i] = this->data[this->position];
 			this->position++;
 		}
@@ -312,14 +312,14 @@ uint64_t Bits::read_uint64(bool reverse){
  * @param reverse If set to true (default is false) the data will be returned byte-reversed.
  * @return The data that was readen or NULL if something failed.
  */
-unsigned char *Bits::peek(int64_t n, bool reverse){
+unsigned char *Bits::peek(uint64_t n, bool reverse){
 	this->unsetError();
 	if(!this->canMoveForward(n)){
 		this->setError();
 		return NULL;
 	}
 
-	int64_t tmppos = this->position;
+	uint64_t tmppos = this->position;
 	unsigned char *tmp = this->read(n, reverse);
 	this->position = tmppos;
 
@@ -334,7 +334,7 @@ unsigned char *Bits::peek(int64_t n, bool reverse){
  * @param patch If set to false (default is true) data will be inserted without replacing, instead of patching.
  * @return True on success, false otherwise.
  */
-bool Bits::write(unsigned char *chunk, int64_t n, bool patch){
+bool Bits::write(unsigned char *chunk, uint64_t n, bool patch){
 	this->unsetError();
 	if(patch && this->canMoveForward(n)){
 
@@ -373,23 +373,25 @@ bool Bits::write(unsigned char *chunk, int64_t n, bool patch){
 
 /**
  * Seek N bytes in the currently loaded data.
- * If N is negative, the position will be decreased.
+ * If `reverse` is true, the position will be decreased.
  * If the operation exceeds the minimum or maximum position, false will be returned.
  * @param n Number of bytes to seek.
+ * @param reverse Boolean value for the direction. True will seek backwards.
  * @return True is the operation was successful, false otherwise.
  */
-bool Bits::seek(int64_t n){
+bool Bits::seek(uint64_t n, bool reverse){
 	this->unsetError();
-	if(
-		(n >= 0 && this->canMoveForward(n)) ||
-		(n <= 0 && this->canMoveBackwards(n))
-	){
+	if(n == 0) return true;
+
+	if(!reverse && this->canMoveForward(n)){
 		this->position += n;
-		return true;
+	}else if(reverse && this->canMoveBackwards(n)){
+		this->position -= n;
 	}else{
 		this->setError();
-		return false;
 	}
+
+	return !this->error;
 }
 
 /**
@@ -397,28 +399,33 @@ bool Bits::seek(int64_t n){
  * The current position will remain unchanged.
  * @param pattern The byte(s) pattern we are looking for.
  * @param n The number of bytes the pattern is long.
- * @return Position/offset or -1 if nothing was found.
+ * @return Position/offset or error is set to true and 0 is returned if nothing was found.
  */
-int64_t Bits::findPrevious(unsigned char *pattern, int64_t n){
+uint64_t Bits::findPrevious(unsigned char *pattern, uint64_t n){
 	this->unsetError();
-	int64_t res = -1, tmppos = this->position;
+	uint64_t res = 0, tmppos = this->position;
+	bool found = false;
 
 	while(this->canMoveBackwards()){;
 		if(!this->canMoveForward(n)){
-			this->seek(-1);
+			this->seek(1, true);
 			continue;
 		}
 
 		bool c1 = memcmp(this->data + this->position, pattern, n);
 		if(c1 == 0){
 			res = this->position;
+			found = true;
 			break;
 		}else{
-			this->seek(-1);
+			this->seek(1, true);
 		}
 	}
 
 	this->position = tmppos;
+	if(found == false){
+		this->setError();
+	}
 	return res;
 }
 
@@ -430,16 +437,18 @@ int64_t Bits::findPrevious(unsigned char *pattern, int64_t n){
  * The current position will remain unchanged.
  * @param pattern The byte(s) pattern we are looking for.
  * @param n The number of bytes the pattern is long.
- * @return Position/offset or -1 if nothing was found.
+ * @return Position/offset or error is set to true and 0 is returned if nothing was found.
  */
-int64_t Bits::findNext(unsigned char *pattern, int64_t n){
+uint64_t Bits::findNext(unsigned char *pattern, uint64_t n){
 	this->unsetError();
-	int64_t res = -1, tmppos = this->position;
+	uint64_t res = 0, tmppos = this->position;
+	bool found = false;
 
 	while(this->canMoveForward(n)){
 		bool c1 = memcmp(this->data + this->position, pattern, n);
 		if(c1 == 0){
 			res = this->position;
+			found = true;
 			break;
 		}else{
 			this->seek(1);
@@ -447,6 +456,9 @@ int64_t Bits::findNext(unsigned char *pattern, int64_t n){
 	}
 
 	this->position = tmppos;
+	if(found == false){
+		this->setError();
+	}
 	return res;
 }
 
@@ -540,7 +552,7 @@ void Bits::printHash(){
 		this->getHash();
 	}
 
-	for(int64_t i = 0; i < SHA_DIGEST_LENGTH; i++){
+	for(uint64_t i = 0; i < SHA_DIGEST_LENGTH; i++){
 		cout << hex << setfill('0') << setw(2) << (int) *(this->hash + i);
 	}
 }
@@ -549,9 +561,9 @@ void Bits::printHash(){
  * Print N bytes starting from the current position, in a hexadecimal representation.
  * @param n Number of bytes to print.
  */
-void Bits::printHex(int64_t n){
+void Bits::printHex(uint64_t n){
 	this->unsetError();
-	for(int64_t i = 0; i < n && this->canMoveForward(); i++){
+	for(uint64_t i = 0; i < n && this->canMoveForward(); i++){
 		cout << hex << setfill('0') << setw(2) << (int) *this->read(1);
 	}
 }
@@ -560,9 +572,9 @@ void Bits::printHex(int64_t n){
  * Print N bytes starting from the current position, each byte in it's bits representation.
  * @param n Number of bytes to print.
  */
-void Bits::printBits(int64_t n){
+void Bits::printBits(uint64_t n){
 	this->unsetError();
-	for(int64_t i = 0; i < n && this->canMoveForward(); i++){
+	for(uint64_t i = 0; i < n && this->canMoveForward(); i++){
 		cout << bitset<8>(*this->read(1));
 	}
 }
@@ -580,27 +592,20 @@ unsigned char *Bits::getData(){
  * Getter for the current position.
  * @return The current position.
  */
-int64_t Bits::getPosition(){
+uint64_t Bits::getPosition(){
 	this->unsetError();
 	return this->position;
 }
 
 /**
- * Get a SHA1 sum of the data holded by thie object.
+ * Get a SHA1 sum of the data holded by this object.
  * @return SHA1 sum.
  */
 unsigned char *Bits::getHash(){
 	this->unsetError();
-	unsigned char *hash;
-
-	hash = (unsigned char*)malloc(SHA_DIGEST_LENGTH);
+	unsigned char *hash = (unsigned char *) malloc(SHA_DIGEST_LENGTH);
 	SHA1(this->data, this->max_position, hash);
 	this->hash = hash;
-
-	for(int64_t i = 0; i < SHA_DIGEST_LENGTH; i++){
-		cout << hex << setfill('0') << setw(2) << (int) *(this->hash + i);
-	}
-
 	return hash;
 }
 
@@ -608,7 +613,7 @@ unsigned char *Bits::getHash(){
  * Set the current position.
  * @param pos The position that is desired.
  */
-bool Bits::setPosition(int64_t pos){
+bool Bits::setPosition(uint64_t pos){
 	this->unsetError();
 	if(this->max_position >= pos){
 		this->position = pos;
@@ -623,7 +628,7 @@ bool Bits::setPosition(int64_t pos){
  * Getter for the maximum position. we can go.
  * @return The maximum position we can go.
  */
-int64_t Bits::getMaxPosition(){
+uint64_t Bits::getMaxPosition(){
 	this->unsetError();
 	return this->max_position;
 }
