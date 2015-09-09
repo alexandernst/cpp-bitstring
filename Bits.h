@@ -36,7 +36,7 @@ class Bits {
 
 		bool fromFile(char *fname = NULL, ios_base::openmode mode = ios::in | ios::binary);
 
-		bool toFile(char *fname = NULL, uint64_t offset = 0, uint64_t size = -1, ios_base::openmode mode = ios::out | ios::binary | ios::trunc);
+		bool toFile(char *fname = NULL, uint64_t offset = 0, uint64_t size = 0, ios_base::openmode mode = ios::out | ios::binary | ios::trunc);
 
 		bool fromMem(unsigned char *chunk, uint64_t size);
 

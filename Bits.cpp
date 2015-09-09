@@ -125,9 +125,9 @@ bool Bits::toFile(char *fname, uint64_t offset, uint64_t size, ios_base::openmod
 		goto err;
 	}
 
-	if(offset == 0 && size == -1){
+	if(offset == 0 && size == 0){
 		size = this->max_position;
-	}else if(offset > 0 && size == -1){
+	}else if(offset > 0 && size == 0){
 		size = this->max_position - offset;
 	}
 

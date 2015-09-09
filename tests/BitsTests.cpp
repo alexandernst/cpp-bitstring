@@ -22,8 +22,10 @@ void BitsTests::testFromFile(){
 	unsigned char chunk[] = "This is a test!";
 	uint64_t size = sizeof(chunk) - 1;
 
-	char tmpfn[L_tmpnam];
-	CPPUNIT_ASSERT(tmpnam(tmpfn) != NULL);
+	const char *tplt = "/tmp/cppbitstring.XXXXXX";
+	char *tmpfn = (char *) alloca(strlen(tplt) + 1);
+	memcpy(tmpfn, tplt, strlen(tplt));
+	tmpfn[strlen(tplt) + 1] = '\0';
 
 	ofstream tmpf(tmpfn);
 	CPPUNIT_ASSERT(tmpf.is_open() == true);
@@ -44,10 +46,12 @@ void BitsTests::testFromFile(){
 
 void BitsTests::testToFile(){
 	unsigned char chunk[] = "This is a test!";
-	int64_t size = sizeof(chunk) - 1;
+	uint64_t size = sizeof(chunk) - 1;
 
-	char tmpfn[L_tmpnam];
-	CPPUNIT_ASSERT(tmpnam(tmpfn) != NULL);
+	const char *tplt = "/tmp/cppbitstring.XXXXXX";
+	char *tmpfn = (char *) alloca(strlen(tplt) + 1);
+	memcpy(tmpfn, tplt, strlen(tplt));
+	tmpfn[strlen(tplt) + 1] = '\0';
 
 	Bits bits;
 	bool readFromFile = bits.fromMem(chunk, size);
@@ -89,13 +93,6 @@ void BitsTests::testToFile(){
 	writeToFile = bits.toFile(tmpfn, 14, 2);
 	CPPUNIT_ASSERT(!writeToFile);
 
-	writeToFile = bits.toFile(tmpfn, 0, 0);
-	CPPUNIT_ASSERT(writeToFile);
-
-	readFromFile = bits2.fromFile(tmpfn);
-	CPPUNIT_ASSERT(readFromFile);
-	CPPUNIT_ASSERT(bits2.getMaxPosition() == 0);
-
 	CPPUNIT_ASSERT(remove(tmpfn) == 0);
 }
 
@@ -125,7 +122,7 @@ void BitsTests::testFromMem(){
 
 void BitsTests::testUnload(){
 	uint64_t size = 10;
-	unsigned char chunk[size];
+	unsigned char *chunk = (unsigned char *) alloca(size);
 
 	Bits bits;
 	bits.fromMem(chunk, size);
