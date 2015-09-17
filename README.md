@@ -12,3 +12,16 @@ Inspired by [Python's Bitstring](https://code.google.com/p/python-bitstring/), C
 read/write operations on random chunks of data, letting you to seek, rewind, read and patch the data.
 
 This is still a basic library, you'll probably miss quite some things, if so, please use the [New Issue](https://github.com/alexandernst/cpp-bitstring/issues/new) button.
+
+### How to build
+
+You'll need `python3` and `ninja-build`. Once you have those, just run:
+
+    mkdir build
+    cd build
+    meson ..
+    ninja
+
+### How to run tests
+
+Build the project, and run `build/unittests`.
