@@ -312,6 +312,139 @@ uint64_t Bits::read_uint64(bool reverse){
 }
 
 /**
+ * Read bits and, optionaly, skip bits from the start. The cursor will be moved by as many bytes as the round up of the (bits to read / 8) and the (bits to skip / 8).
+ * @param n_bits Number of bits to read
+ * @param skip_n_bits Number of bits to skip from the start. Default 0.
+ * @return bit_data struct containing the readed bits. Note that if there are no enough bytes to read, the `data` field will be NULL and the `length` will be 0.
+ */
+Bits *Bits::readBits(size_t n_bits, size_t skip_n_bits){
+	this->unsetError();
+	Bits *bits = new Bits;
+
+	printf("\n================\n");
+
+	/*
+	 * If we got a skip_n_bits bigger than 8, we can skip an entire byte(s)
+	 * and then set skip_b_bits to the remining bits.
+	 */
+	 printf("skip_n_bits before: %zu\n", skip_n_bits);
+	if(skip_n_bits >= 8){
+		size_t rem = skip_n_bits / 8;
+		printf("    -> skipping %zu bytes\n", rem);
+		this->seek(rem);
+		skip_n_bits = skip_n_bits % 8;
+	}
+	printf("skip_n_bits after: %zu\n", skip_n_bits);
+
+	/*
+	 * We must allocate enough memory for all the bits, meaning that even if we
+	 * must read only 9 bits, we must allocate 2 bytes (16 bits).
+	 */
+	size_t bytes_to_alloc = (n_bits + 7) / 8;
+	size_t bytes_to_read = bytes_to_alloc;
+	if(skip_n_bits != 0) {
+		bytes_to_read++;
+	}
+
+	printf("bytes_to_alloc: %zu\n", bytes_to_alloc);
+	printf("bytes_to_read: %zu\n", bytes_to_read);
+	printf("================\n");
+
+	if(this->canMoveForward(bytes_to_read) == false) {
+		return NULL;
+	}
+
+	unsigned char *tmp = this->read(bytes_to_read);
+	if(skip_n_bits > 0){
+		for (size_t i = 0; i < bytes_to_read - 1; i++) {
+			tmp[i] = (tmp[i] << skip_n_bits) | (tmp[i+1] >> (8 - skip_n_bits));
+		}
+	}
+
+	bits->fromMem(tmp, bytes_to_alloc);
+
+	return bits;
+}
+
+/**
+ * Compare a chunk of data with an binary representation of each bit. The cursor will be moved by as many bytes as the round up of the (bits to read / 8) and the (bits to skip / 8).
+ * @param string a hexadecimal representation of the tested data. Might contain spaces, but must be uppercase.
+ * @param size_t Number of bits to read.
+ * @param size_t Number of bits to skip.
+ * @return True if data is equal to the given hex represenntation.
+ */
+bool Bits::compareBits(const char *string, size_t check_n_bits, size_t skip_b_bits){
+	bool match = true;
+
+	size_t bytes = ceil(check_n_bits / 8.0);
+	size_t bytes_with_skip = ceil((check_n_bits + skip_b_bits) / 8.0);
+	if(this->canMoveForward(bytes_with_skip) == false) return false;
+
+	Bits *data = this->readBits(check_n_bits, skip_b_bits);
+
+	unsigned char *bin_string = Utils::removeSpaces(string);
+	size_t len = strlen((const char *) bin_string);
+	if(Utils::isValidBinString(bin_string) || len < check_n_bits) return false;
+
+	unsigned int last_bits = check_n_bits <= 8 ? check_n_bits : (bytes * 8) - check_n_bits;
+	last_bits = last_bits == 0 ? 8 : last_bits;
+
+	char tmp_bin_repr[9], tmp_bin_repr_2[9];
+
+	//printf("\n====START======= (comparing %d bytes => %zu check_n_bits & %zu skip_b_bits)\n", bytes, check_n_bits, skip_b_bits);
+	for(size_t i = 0; i < bytes ; i++) {
+		uint8_t c = data->read_uint8();
+		sprintf((char *) &tmp_bin_repr, BYTETOBINARYPATTERN, BYTETOBINARY(c));
+		sprintf((char *) &tmp_bin_repr_2, BYTETOSTRINGPATTERN, BYTETOSTRING(bin_string[i * 8]));
+
+		//printf("Comparing %d chars de '%s' and '%s'\n", i + 1 == bytes ? last_bits : 8, tmp_bin_repr, tmp_bin_repr_2);
+		if(strncmp((const char *) tmp_bin_repr, (const char *) tmp_bin_repr_2, i + 1 == bytes ? last_bits : 8) != 0) {
+			match = false;
+			break;
+		}
+	}
+	//printf("====END=======\n");
+
+	free(data);
+	free(bin_string);
+
+	return match;
+}
+
+/**
+ * Compare a chunk of data with an hexadecimal representation of each byte. The cursor will be moved by as many bytes as the sum of the bytes to read and the bytes to skip.
+ * @param string a hexadecimal representation of the tested data. Might contain spaces, but must be uppercase.
+ * @param size_t Number of bytes to read.
+ * @param size_t Number of bytes to skip.
+ * @return True if data is equal to the given hex represenntation.
+ */
+bool Bits::compareBytes(const char *string, size_t check_n_bytes, size_t skip_b_bytes){
+	bool match = true;
+	if(this->canMoveForward(check_n_bytes) == false) return false;
+
+	byte *data = this->read(check_n_bytes);
+
+	unsigned char *hex_string = Utils::removeSpaces(string);
+	size_t len = strlen((const char *) hex_string);
+	if(Utils::isValidBinString(hex_string) || len < check_n_bytes * 2) return false;
+
+	char tmp_hex_repr[3], tmp_hex_repr_2[3];
+
+	for(size_t i = 0; i < check_n_bytes; i++) {
+		sprintf((char *) &tmp_hex_repr, "%X", data[i]);
+		sprintf((char *) &tmp_hex_repr_2, "%c%c", hex_string[i * 2], hex_string[(i * 2) + 1]);
+
+		if(strncmp((const char *) tmp_hex_repr, (const char *) tmp_hex_repr_2, 2) != 0) {
+			match = false;
+			break;
+		}
+	}
+
+	free(hex_string);
+	return match;
+}
+
+/**
  * Read N bytes starting from the current position of the data, without changing the position.
  * @param n Number of bytes to read.
  * @param reverse If set to true (default is false) the data will be returned byte-reversed.

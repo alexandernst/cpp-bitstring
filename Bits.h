@@ -17,8 +17,37 @@
 #include <iostream>
 #include <cinttypes>
 #include <openssl/sha.h>
+#include "Utils.h"
+
+#define BYTETOSTRINGPATTERN "%c%c%c%c%c%c%c%c"
+#define BYTETOSTRING(byte) \
+	byte, \
+	*(&byte + 1), \
+	*(&byte + 2), \
+	*(&byte + 3), \
+	*(&byte + 4), \
+	*(&byte + 5), \
+	*(&byte + 6), \
+	*(&byte + 7)
+
+#define BYTETOBINARYPATTERN "%d%d%d%d%d%d%d%d"
+#define BYTETOBINARY(byte) \
+	(byte & 0x80 ? 1 : 0), \
+	(byte & 0x40 ? 1 : 0), \
+	(byte & 0x20 ? 1 : 0), \
+	(byte & 0x10 ? 1 : 0), \
+	(byte & 0x08 ? 1 : 0), \
+	(byte & 0x04 ? 1 : 0), \
+	(byte & 0x02 ? 1 : 0), \
+	(byte & 0x01 ? 1 : 0)
 
 using namespace std;
+
+typedef unsigned char byte;
+typedef struct bit_data {
+	byte *data;
+	size_t length;
+} bit_data;
 
 class Bits {
 
@@ -51,6 +80,12 @@ class Bits {
 		uint32_t read_uint32(bool reverse = false);
 
 		uint64_t read_uint64(bool reverse = false);
+
+		Bits *readBits(size_t n_bits, size_t skip_n_bits = 0);
+
+		bool compareBits(const char *string, size_t check_n_bits, size_t skip_b_bits = 0);
+
+		bool compareBytes(const char *string, size_t check_n_bytes, size_t skip_b_bytes = 0);
 
 		unsigned char *peek(uint64_t n, bool reverse = false);
 
@@ -90,7 +125,7 @@ class Bits {
 
 		bool is_from_file, error;
 		unsigned char *data, *hash;
-		uint64_t position, max_position;
+		size_t position, max_position;
 
 		void unsetError();
 		void setError();
