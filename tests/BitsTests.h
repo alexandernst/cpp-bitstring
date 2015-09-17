@@ -16,6 +16,9 @@ class BitsTests : public CPPUNIT_NS::TestFixture {
 	CPPUNIT_TEST(testRead_uint16);
 	CPPUNIT_TEST(testRead_uint32);
 	CPPUNIT_TEST(testRead_uint64);
+	CPPUNIT_TEST(testReadBits);
+	CPPUNIT_TEST(testCompareBits);
+	CPPUNIT_TEST(testCompareBytes);
 	CPPUNIT_TEST(testPeek);
 	CPPUNIT_TEST(testWrite);
 	CPPUNIT_TEST(testSeek);
@@ -50,6 +53,9 @@ private:
 	void testRead_uint16();
 	void testRead_uint32();
 	void testRead_uint64();
+	void testReadBits();
+	void testCompareBits();
+	void testCompareBytes();
 	void testPeek();
 	void testWrite();
 	void testSeek();

@@ -1,5 +1,6 @@
 #include "BitsTests.h"
 #include "Bits.h"
+#include "Utils.h"
 using namespace std;
 
 CPPUNIT_TEST_SUITE_REGISTRATION(BitsTests);
@@ -245,6 +246,120 @@ void BitsTests::testRead_uint64(){
 
 	i = bits.read_uint64();
 	CPPUNIT_ASSERT(i == 0 && bits.checkIfError() == true);
+}
+
+void BitsTests::testReadBits(){
+	byte chunk[] = "EFGHIJK";
+	size_t size = sizeof(chunk) - 1;
+	ostringstream out;
+	streambuf *orig_buf = cout.rdbuf();
+
+	Bits bits;
+	bits.fromMem(chunk, size);
+
+	Bits *bits2 = bits.readBits(56);
+
+	cout.rdbuf(out.rdbuf());
+	bits2->printBits(1);
+	cout.rdbuf(orig_buf);
+	unsigned int c1 = memcmp(out.str().c_str(), "01000101", 8);
+	CPPUNIT_ASSERT(c1 == 0);
+
+	out.str("");
+	out.clear();
+	bits2->setPosition(2);
+	cout.rdbuf(out.rdbuf());
+	bits2->printBits(1);
+	cout.rdbuf(orig_buf);
+	unsigned int c2 = memcmp(out.str().c_str(), "01000111", 8);
+	CPPUNIT_ASSERT(c2 == 0);
+
+	free(bits2);
+
+	bits.setPosition(0);
+	Bits *bits3 = bits.readBits(64);
+	CPPUNIT_ASSERT(bits3 == NULL);
+
+	bits.setPosition(0);
+	bits3 = bits.readBits(56, 1);
+	CPPUNIT_ASSERT(bits3 == NULL);
+	free(bits3);
+
+	out.str("");
+	out.clear();
+	bits.setPosition(0);
+	Bits *bits4 = bits.readBits(8, 4);
+	cout.rdbuf(out.rdbuf());
+	bits4->printBits(1);
+	cout.rdbuf(orig_buf);
+	unsigned int c3 = memcmp(out.str().c_str(), "01010100", 8);
+	CPPUNIT_ASSERT(c3 == 0);
+	free(bits4);
+
+	out.str("");
+	out.clear();
+	bits.setPosition(0);
+	cout.rdbuf(out.rdbuf());
+	Bits *bits5 = bits.readBits(48, 3);
+	bits5->printBits(6);
+	cout.rdbuf(orig_buf);
+	unsigned int c4 = memcmp(out.str().c_str(), "00101010 00110010 00111010 01000010 01001010 01010010", 48);
+	CPPUNIT_ASSERT(c4);
+	free(bits5);
+
+	out.str("");
+	out.clear();
+	bits.setPosition(0);
+	printf("\nOriginal data:\n");
+	bits.printBits(4);
+	printf("\n\n\n\n\n\n\n\n");
+	printf("\nReading 16 and skipping 12\n");
+	Bits *bits6 = bits.readBits(16, 12);
+	cout.rdbuf(out.rdbuf());
+	bits6->printBits(2);
+	cout.rdbuf(orig_buf);
+	unsigned int c5 = memcmp(out.str().c_str(), "01100100 01110100", 16);
+	printf("bits6 output:\n%s\n", out.str().c_str());
+	printf("\n\n\n\n\n\n\n\n");
+	CPPUNIT_ASSERT(c5 == 0);
+	free(bits6);
+
+}
+
+void BitsTests::testCompareBits(){
+	byte chunk[] = "This";
+	size_t size = sizeof(chunk) - 1;
+
+	Bits bits;
+	bits.fromMem(chunk, size);
+
+	bool res = bits.compareBits("01010100", 8);
+	CPPUNIT_ASSERT(res);
+
+	bool res2 = bits.compareBits("000", 3, 5);
+	CPPUNIT_ASSERT(res2);
+
+	bool res3 = bits.compareBits("01101001 01110011", 16);
+	CPPUNIT_ASSERT(res3);
+}
+
+void BitsTests::testCompareBytes(){
+	byte chunk[] = "This";
+	size_t size = sizeof(chunk) - 1;
+
+	Bits bits;
+	bits.fromMem(chunk, size);
+
+	bool res = bits.compareBytes("54 68 69 73", 4);
+	CPPUNIT_ASSERT(res);
+
+	bits.seek(4, true);
+	bool res2 = bits.compareBytes("546869XX", 3);
+	CPPUNIT_ASSERT(res2);
+
+	bits.seek(3, true);
+	bool res3 = bits.compareBytes("546869XX", 4);
+	CPPUNIT_ASSERT(res3 == false);
 }
 
 void BitsTests::testPeek(){
@@ -509,7 +624,7 @@ void BitsTests::testPrintHex(){
 	//Restore cout
 	cout.rdbuf(orig_buf);
 
-	unsigned int c1 = memcmp(out.str().c_str(), "546869732069732061207465737421", size * 2);
+	unsigned int c1 = memcmp(out.str().c_str(), "54 68 69 73 20 69 73 20 61 20 74 65 73 74 21", (size * 2) + (size - 1));
 	CPPUNIT_ASSERT(c1 == 0);
 }
 
@@ -529,6 +644,6 @@ void BitsTests::testPrintBits(){
 	//Restore cout
 	cout.rdbuf(orig_buf);
 
-	unsigned int c1 = memcmp(out.str().c_str(), "0101010001101000", 16);
+	unsigned int c1 = memcmp(out.str().c_str(), "01010100 01101000", 16 + 1);
 	CPPUNIT_ASSERT(c1 == 0);
 }
