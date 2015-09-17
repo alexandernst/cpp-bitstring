@@ -303,27 +303,20 @@ void BitsTests::testReadBits(){
 	Bits *bits5 = bits.readBits(48, 3);
 	bits5->printBits(6);
 	cout.rdbuf(orig_buf);
-	unsigned int c4 = memcmp(out.str().c_str(), "00101010 00110010 00111010 01000010 01001010 01010010", 48);
-	CPPUNIT_ASSERT(c4);
+	unsigned int c4 = memcmp(out.str().c_str(), "00101010 00110010 00111010 01000010 01001010 01010010", 48 + 5);
+	CPPUNIT_ASSERT(c4 == 0);
 	free(bits5);
 
 	out.str("");
 	out.clear();
 	bits.setPosition(0);
-	printf("\nOriginal data:\n");
-	bits.printBits(4);
-	printf("\n\n\n\n\n\n\n\n");
-	printf("\nReading 16 and skipping 12\n");
 	Bits *bits6 = bits.readBits(16, 12);
 	cout.rdbuf(out.rdbuf());
 	bits6->printBits(2);
 	cout.rdbuf(orig_buf);
-	unsigned int c5 = memcmp(out.str().c_str(), "01100100 01110100", 16);
-	printf("bits6 output:\n%s\n", out.str().c_str());
-	printf("\n\n\n\n\n\n\n\n");
+	unsigned int c5 = memcmp(out.str().c_str(), "01100100 01110100", 16 + 1);
 	CPPUNIT_ASSERT(c5 == 0);
 	free(bits6);
-
 }
 
 void BitsTests::testCompareBits(){

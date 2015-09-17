@@ -321,20 +321,15 @@ Bits *Bits::readBits(size_t n_bits, size_t skip_n_bits){
 	this->unsetError();
 	Bits *bits = new Bits;
 
-	printf("\n================\n");
-
 	/*
 	 * If we got a skip_n_bits bigger than 8, we can skip an entire byte(s)
 	 * and then set skip_b_bits to the remining bits.
 	 */
-	 printf("skip_n_bits before: %zu\n", skip_n_bits);
 	if(skip_n_bits >= 8){
 		size_t rem = skip_n_bits / 8;
-		printf("    -> skipping %zu bytes\n", rem);
 		this->seek(rem);
 		skip_n_bits = skip_n_bits % 8;
 	}
-	printf("skip_n_bits after: %zu\n", skip_n_bits);
 
 	/*
 	 * We must allocate enough memory for all the bits, meaning that even if we
@@ -345,10 +340,6 @@ Bits *Bits::readBits(size_t n_bits, size_t skip_n_bits){
 	if(skip_n_bits != 0) {
 		bytes_to_read++;
 	}
-
-	printf("bytes_to_alloc: %zu\n", bytes_to_alloc);
-	printf("bytes_to_read: %zu\n", bytes_to_read);
-	printf("================\n");
 
 	if(this->canMoveForward(bytes_to_read) == false) {
 		return NULL;
