@@ -244,6 +244,7 @@ uint8_t Bits::read_uint8(){
 
 	if(c != NULL){
 		i = (uint8_t) c[0];
+		free(c);
 	}else{
 		this->setError();
 	}
@@ -263,6 +264,7 @@ uint16_t Bits::read_uint16(bool reverse){
 
 	if(c != NULL){
 		i = (uint16_t) c[1] | ((uint16_t) c[0] << 8);
+		free(c);
 	}else{
 		this->setError();
 	}
@@ -282,6 +284,7 @@ uint32_t Bits::read_uint32(bool reverse){
 
 	if(c != NULL){
 		i = (uint32_t) c[3] | ((uint32_t) c[2] << 8) | ((uint32_t) c[1] << 16) | ((uint32_t) c[0] << 24);
+		free(c);
 	}else{
 		this->setError();
 	}
@@ -301,6 +304,7 @@ uint64_t Bits::read_uint64(bool reverse){
 
 	if(c != NULL){
 		i = (uint64_t) c[7] | ((uint64_t) c[6] << 8) | ((uint64_t) c[5] << 16) | ((uint64_t) c[4] << 24) | ((uint64_t) c[3] << 32) | ((uint64_t) c[2] << 40) | ((uint64_t) c[1] << 48) | ((uint64_t) c[0] << 56);
+		free(c);
 	}else{
 		this->setError();
 	}
@@ -559,25 +563,42 @@ void Bits::printHash(){
 }
 
 /**
- * Print N bytes starting from the current position, in a hexadecimal representation.
+ * Print N bytes starting from the current position, in a hexadecimal representation. Nothing will be printed if the requested number of bytes is bigger than the remaining data. Cursor won't be moved.
  * @param n Number of bytes to print.
  */
 void Bits::printHex(uint64_t n){
 	this->unsetError();
-	for(uint64_t i = 0; i < n && this->canMoveForward(); i++){
-		cout << hex << setfill('0') << setw(2) << (int) *this->read(1);
+	if(this->canMoveForward(n) == false) return;
+	unsigned char *c;
+	for(uint64_t i = 0; i < n; i++){
+		c = this->read(1);
+		cout << hex << setfill('0') << setw(2) << (int) *c;
+		if(i + 1 < n) {
+			cout << ' ';
+		}
+		free(c);
 	}
+	this->seek(n, true);
+
 }
 
 /**
- * Print N bytes starting from the current position, each byte in it's bits representation.
+ * Print N bytes starting from the current position, each byte in it's bits representation. Nothing will be printed if the requested number of bytes is bigger than the remaining data. Cursor won't be moved.
  * @param n Number of bytes to print.
  */
 void Bits::printBits(uint64_t n){
 	this->unsetError();
-	for(uint64_t i = 0; i < n && this->canMoveForward(); i++){
-		cout << bitset<8>(*this->read(1));
+	if(this->canMoveForward(n) == false) return;
+	unsigned char *c;
+	for(uint64_t i = 0; i < n; i++){
+		c = this->read(1);
+		cout << bitset<8>(*c);
+		if(i + 1 < n) {
+			cout << ' ';
+		}
+		free(c);
 	}
+	this->seek(n, true);
 }
 
 /**
