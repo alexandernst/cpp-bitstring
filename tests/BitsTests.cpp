@@ -258,12 +258,12 @@ void BitsTests::testReadBits(){
 	bits.fromMem(chunk, size);
 
 	Bits *bits2 = bits.readBits(56);
-
 	cout.rdbuf(out.rdbuf());
 	bits2->printBits(1);
 	cout.rdbuf(orig_buf);
 	unsigned int c1 = memcmp(out.str().c_str(), "01000101", 8);
 	CPPUNIT_ASSERT(c1 == 0);
+	CPPUNIT_ASSERT(bits.getPosition() == 7);
 
 	out.str("");
 	out.clear();
@@ -273,16 +273,17 @@ void BitsTests::testReadBits(){
 	cout.rdbuf(orig_buf);
 	unsigned int c2 = memcmp(out.str().c_str(), "01000111", 8);
 	CPPUNIT_ASSERT(c2 == 0);
-
 	free(bits2);
 
 	bits.setPosition(0);
 	Bits *bits3 = bits.readBits(64);
 	CPPUNIT_ASSERT(bits3 == NULL);
+	CPPUNIT_ASSERT(bits.getPosition() == 0);
 
 	bits.setPosition(0);
 	bits3 = bits.readBits(56, 1);
 	CPPUNIT_ASSERT(bits3 == NULL);
+	CPPUNIT_ASSERT(bits.getPosition() == 0);
 	free(bits3);
 
 	out.str("");
@@ -294,6 +295,7 @@ void BitsTests::testReadBits(){
 	cout.rdbuf(orig_buf);
 	unsigned int c3 = memcmp(out.str().c_str(), "01010100", 8);
 	CPPUNIT_ASSERT(c3 == 0);
+	CPPUNIT_ASSERT(bits.getPosition() == 2);
 	free(bits4);
 
 	out.str("");
@@ -305,6 +307,7 @@ void BitsTests::testReadBits(){
 	cout.rdbuf(orig_buf);
 	unsigned int c4 = memcmp(out.str().c_str(), "00101010 00110010 00111010 01000010 01001010 01010010", 48 + 5);
 	CPPUNIT_ASSERT(c4 == 0);
+	CPPUNIT_ASSERT(bits.getPosition() == 7);
 	free(bits5);
 
 	out.str("");
@@ -316,42 +319,58 @@ void BitsTests::testReadBits(){
 	cout.rdbuf(orig_buf);
 	unsigned int c5 = memcmp(out.str().c_str(), "01100100 01110100", 16 + 1);
 	CPPUNIT_ASSERT(c5 == 0);
+	CPPUNIT_ASSERT(bits.getPosition() == 4);
 	free(bits6);
+
+	Bits bits7;
+	bits7.fromMem(chunk, 1);
+
+	out.str("");
+	out.clear();
+	Bits *bits8 = bits7.readBits(3, 5);
+	CPPUNIT_ASSERT(bits8 != NULL);
+	cout.rdbuf(out.rdbuf());
+	bits8->printBits(1);
+	cout.rdbuf(orig_buf);
+	unsigned int c6 = memcmp(out.str().c_str(), "10100000", 8);
+	CPPUNIT_ASSERT(c6 == 0);
+	CPPUNIT_ASSERT(bits7.getPosition() == 1);
+	free(bits4);
 }
 
-void BitsTests::testCompareBits(){
+void BitsTests::testCompareBinary(){
 	byte chunk[] = "This";
 	size_t size = sizeof(chunk) - 1;
 
 	Bits bits;
 	bits.fromMem(chunk, size);
 
-	bool res = bits.compareBits("01010100", 8);
+	bool res = bits.compareBinary("01010100", 8);
 	CPPUNIT_ASSERT(res);
 
-	bool res2 = bits.compareBits("000", 3, 5);
+	bool res2 = bits.compareBinary("000", 3, 5);
 	CPPUNIT_ASSERT(res2);
 
-	bool res3 = bits.compareBits("01101001 01110011", 16);
+	bool res3 = bits.compareBinary("01101001 01110011", 16);
 	CPPUNIT_ASSERT(res3);
 }
 
-void BitsTests::testCompareBytes(){
+void BitsTests::testCompareHex(){
 	byte chunk[] = "This";
 	size_t size = sizeof(chunk) - 1;
 
 	Bits bits;
 	bits.fromMem(chunk, size);
 
-	bool res = bits.compareBytes("54 68 69 73", 4);
+	bool res = bits.compareHex("54 68 69 73", 4);
 	CPPUNIT_ASSERT(res);
 
 	bits.seek(4, true);
-	bool res2 = bits.compareBytes("546869XX", 3);
+	bool res2 = bits.compareHex("546869XX", 3);
 	CPPUNIT_ASSERT(res2);
 
 	bits.seek(3, true);
-	bool res3 = bits.compareBytes("546869XX", 4);
+	bool res3 = bits.compareHex("546869XX", 4);
 	CPPUNIT_ASSERT(res3 == false);
 }
 
