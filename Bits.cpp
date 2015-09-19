@@ -337,7 +337,7 @@ Bits *Bits::readBits(size_t n_bits, size_t skip_n_bits){
 	 */
 	size_t bytes_to_alloc = (n_bits + 7) / 8;
 	size_t bytes_to_read = bytes_to_alloc;
-	if(skip_n_bits != 0) {
+	if(skip_n_bits != 0 && (n_bits + skip_n_bits) > 8) {
 		bytes_to_read++;
 	}
 
@@ -346,7 +346,9 @@ Bits *Bits::readBits(size_t n_bits, size_t skip_n_bits){
 	}
 
 	unsigned char *tmp = this->read(bytes_to_read);
-	if(skip_n_bits > 0){
+	if(skip_n_bits > 0 && (n_bits + skip_n_bits) <= 8) {
+		tmp[0] = tmp[0] << skip_n_bits;
+	}else if(skip_n_bits > 0){
 		for (size_t i = 0; i < bytes_to_read - 1; i++) {
 			tmp[i] = (tmp[i] << skip_n_bits) | (tmp[i+1] >> (8 - skip_n_bits));
 		}
@@ -382,20 +384,25 @@ bool Bits::compareBinary(const char *string, size_t check_n_bits, size_t skip_b_
 
 	char tmp_bin_repr[9], tmp_bin_repr_2[9];
 
-	//printf("\n====START======= (comparing %d bytes => %zu check_n_bits & %zu skip_b_bits)\n", bytes, check_n_bits, skip_b_bits);
 	for(size_t i = 0; i < bytes ; i++) {
 		uint8_t c = data->read_uint8();
 		sprintf((char *) &tmp_bin_repr, BYTETOBINARYPATTERN, BYTETOBINARY(c));
 		sprintf((char *) &tmp_bin_repr_2, BYTETOSTRINGPATTERN, BYTETOSTRING(bin_string[i * 8]));
 
-		//printf("Comparing %d chars de '%s' and '%s'\n", i + 1 == bytes ? last_bits : 8, tmp_bin_repr, tmp_bin_repr_2);
-		if(strncmp((const char *) tmp_bin_repr, (const char *) tmp_bin_repr_2, i + 1 == bytes ? last_bits : 8) != 0) {
-			match = false;
-			break;
+		if(i + 1 == bytes) {
+			if(memcmp((const char *) tmp_bin_repr + (8 - last_bits), (const char *) tmp_bin_repr_2, last_bits) != 0) {
+				match = false;
+				break;
+			}
+		} else {
+			if(memcmp((const char *) tmp_bin_repr, (const char *) tmp_bin_repr_2, 8) != 0) {
+				match = false;
+				break;
+			}
 		}
 	}
-	//printf("====END=======\n");
 
+	free(data->data);
 	free(data);
 	free(bin_string);
 
