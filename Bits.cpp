@@ -362,13 +362,13 @@ Bits *Bits::readBits(size_t n_bits, size_t skip_n_bits){
  * @param string a hexadecimal representation of the tested data. Might contain spaces, but must be uppercase.
  * @param size_t Number of bits to read.
  * @param size_t Number of bits to skip.
- * @return True if data is equal to the given hex represenntation.
+ * @return True if data is equal to the given binary represenntation.
  */
-bool Bits::compareBits(const char *string, size_t check_n_bits, size_t skip_b_bits){
+bool Bits::compareBinary(const char *string, size_t check_n_bits, size_t skip_b_bits){
 	bool match = true;
 
-	size_t bytes = ceil(check_n_bits / 8.0);
-	size_t bytes_with_skip = ceil((check_n_bits + skip_b_bits) / 8.0);
+	size_t bytes = (check_n_bits + 7) / 8;
+	size_t bytes_with_skip = (check_n_bits + skip_b_bits + 7) / 8;
 	if(this->canMoveForward(bytes_with_skip) == false) return false;
 
 	Bits *data = this->readBits(check_n_bits, skip_b_bits);
@@ -409,7 +409,7 @@ bool Bits::compareBits(const char *string, size_t check_n_bits, size_t skip_b_bi
  * @param size_t Number of bytes to skip.
  * @return True if data is equal to the given hex represenntation.
  */
-bool Bits::compareBytes(const char *string, size_t check_n_bytes, size_t skip_b_bytes){
+bool Bits::compareHex(const char *string, size_t check_n_bytes, size_t skip_b_bytes){
 	bool match = true;
 	if(this->canMoveForward(check_n_bytes) == false) return false;
 

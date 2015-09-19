@@ -83,9 +83,9 @@ class Bits {
 
 		Bits *readBits(size_t n_bits, size_t skip_n_bits = 0);
 
-		bool compareBits(const char *string, size_t check_n_bits, size_t skip_b_bits = 0);
+		bool compareBinary(const char *string, size_t check_n_bits, size_t skip_b_bits = 0);
 
-		bool compareBytes(const char *string, size_t check_n_bytes, size_t skip_b_bytes = 0);
+		bool compareHex(const char *string, size_t check_n_bytes, size_t skip_b_bytes = 0);
 
 		unsigned char *peek(uint64_t n, bool reverse = false);
 
