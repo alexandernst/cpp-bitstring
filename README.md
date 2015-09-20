@@ -15,7 +15,7 @@ This is still a basic library, you'll probably miss quite some things, if so, pl
 
 ### How to build
 
-You'll need `python3` and `ninja-build`. Once you have those, just run:
+You'll need `meson`, `python3` and `ninja-build`. Once you have those, just run:
 
     mkdir build
     cd build
