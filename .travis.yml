@@ -5,18 +5,34 @@ compiler:
 
 before_install:
     - sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test
+    - sudo add-apt-repository -y ppa:fkrull/deadsnakes
+    - sudo apt-get update
+    - sudo apt-get -qq install gcc-5 g++-5 libstdc++-5-dev libcppunit-dev python3.4 unzip
+
 
 install:
-    - sudo apt-get update
-    - sudo apt-get install -qq gcc-4.8 g++-4.8 libstdc++-4.8-dev libcppunit-dev
-    - sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-4.8 90
+    - PATH=$PATH:`pwd`/
+    - wget https://github.com/martine/ninja/releases/download/v1.6.0/ninja-linux.zip
+    - unzip ninja-linux.zip
+    - rm ninja-linux.zip
+
+    - sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-5 10
+    - sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-5 10
+
+    - wget https://github.com/mesonbuild/meson/releases/download/0.26.0/meson_0.26.0.tar.gz
+    - tar -xvf meson_0.26.0.tar.gz
+    - cd meson-0.26.0
+    - python3.4 install_meson.py --prefix /home/`whoami`/meson
+    - cd ..
+    - rm -rf meson-0.26.0 meson_0.26.0.tar.gz
 
 script:
-    - if [ `getconf LONG_BIT` -eq 64 ]; then impl="Release_x64"; else impl="Release_86"; fi
-    - make CONF=${impl}
-    - make test CONF=${impl} 2>&1 | if [ `grep "Failures" | wc -l` -ne 0 ]; then exit 1; else exit 0 ; fi
-
-before_deploy: "./nbproject/Package-${impl}.bash"
+    - p=`pwd`
+    - mkdir build
+    - cd build
+    - python3.4 /home/`whoami`/meson/bin/meson `echo $p`
+    - ninja
+    - ./unittests | if [ `grep "Failures" | wc -l` -ne 0 ]; then exit 1; else exit 0 ; fi
 
 deploy:
     provider: releases
