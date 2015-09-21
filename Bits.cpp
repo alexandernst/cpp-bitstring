@@ -398,16 +398,11 @@ bool Bits::compareBinary(const char *string, size_t check_n_bits, size_t skip_b_
 		sprintf((char *) &tmp_bin_repr, BYTETOBINARYPATTERN, BYTETOBINARY(c));
 		sprintf((char *) &tmp_bin_repr_2, BYTETOSTRINGPATTERN, BYTETOSTRING(bin_string[i * 8]));
 
-		if(i + 1 == bytes) {
-			if(memcmp((const char *) tmp_bin_repr + (8 - last_bits), (const char *) tmp_bin_repr_2, last_bits) != 0) {
-				match = false;
-				break;
-			}
-		} else {
-			if(memcmp((const char *) tmp_bin_repr, (const char *) tmp_bin_repr_2, 8) != 0) {
-				match = false;
-				break;
-			}
+		int skip_bits_if_last = i + 1 == bytes ? (8 - last_bits) : 0;
+		int bits_to_compare = i + 1 == bytes ? last_bits : 8;
+		if(memcmp((const char *) tmp_bin_repr + skip_bits_if_last, (const char *) tmp_bin_repr_2, bits_to_compare) != 0) {
+			match = false;
+			break;
 		}
 	}
 
