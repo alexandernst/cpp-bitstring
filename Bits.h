@@ -57,21 +57,21 @@ class Bits {
 
 		virtual ~Bits();
 
-		bool canMoveBackwards(uint64_t n = 1);
+		bool canMoveBackwards(size_t n = 1);
 
-		bool canMoveForward(uint64_t n = 1);
+		bool canMoveForward(size_t n = 1);
 
 		bool checkIfError();
 
 		bool fromFile(char *fname = NULL, ios_base::openmode mode = ios::in | ios::binary);
 
-		bool toFile(char *fname = NULL, uint64_t offset = 0, uint64_t size = 0, ios_base::openmode mode = ios::out | ios::binary | ios::trunc);
+		bool toFile(char *fname = NULL, size_t offset = 0, size_t size = 0, ios_base::openmode mode = ios::out | ios::binary | ios::trunc);
 
-		bool fromMem(unsigned char *chunk, uint64_t size);
+		bool fromMem(unsigned char *chunk, size_t size);
 
 		void unload();
 
-		unsigned char *read(uint64_t n, bool reverse = false);
+		unsigned char *read(size_t n, bool reverse = false);
 
 		uint8_t read_uint8();
 
@@ -87,15 +87,15 @@ class Bits {
 
 		bool compareHex(const char *string, size_t check_n_bytes, size_t skip_b_bytes = 0);
 
-		unsigned char *peek(uint64_t n, bool reverse = false);
+		unsigned char *peek(size_t n, bool reverse = false);
 
-		bool write(unsigned char *chunk, uint64_t n, bool patch = true);
+		bool write(unsigned char *chunk, size_t n, bool patch = true);
 
-		bool seek(uint64_t n, bool reverse = false);
+		bool seek(size_t n, bool reverse = false);
 
-		uint64_t findPrevious(unsigned char *pattern, uint64_t n);
+		size_t findPrevious(unsigned char *pattern, size_t n);
 
-		uint64_t findNext(unsigned char *pattern, uint64_t n);
+		size_t findNext(unsigned char *pattern, size_t n);
 
 		bool testBit(unsigned int bit);
 
@@ -107,19 +107,19 @@ class Bits {
 
 		void printHash();
 
-		void printHex(uint64_t n);
+		void printHex(size_t n);
 
-		void printBits(uint64_t n);
+		void printBits(size_t n);
 
 		unsigned char *getData();
 
-		uint64_t getPosition();
+		size_t getPosition();
 
 		unsigned char *getHash();
 
-		bool setPosition(uint64_t pos);
+		bool setPosition(size_t pos);
 
-		uint64_t getMaxPosition();
+		size_t getMaxPosition();
 
 	private:
 
