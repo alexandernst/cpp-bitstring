@@ -273,18 +273,16 @@ void BitsTests::testReadBits(){
 	cout.rdbuf(orig_buf);
 	unsigned int c2 = memcmp(out.str().c_str(), "01000111", 8);
 	CPPUNIT_ASSERT(c2 == 0);
-	free(bits2);
+	bits2->clear();
+	delete bits2;
 
 	bits.setPosition(0);
 	Bits *bits3 = bits.readBits(64);
 	CPPUNIT_ASSERT(bits3 == NULL);
-	CPPUNIT_ASSERT(bits.getPosition() == 0);
 
 	bits.setPosition(0);
 	bits3 = bits.readBits(56, 1);
 	CPPUNIT_ASSERT(bits3 == NULL);
-	CPPUNIT_ASSERT(bits.getPosition() == 0);
-	free(bits3);
 
 	out.str("");
 	out.clear();
@@ -296,7 +294,8 @@ void BitsTests::testReadBits(){
 	unsigned int c3 = memcmp(out.str().c_str(), "01010100", 8);
 	CPPUNIT_ASSERT(c3 == 0);
 	CPPUNIT_ASSERT(bits.getPosition() == 2);
-	free(bits4);
+	bits4->clear();
+	delete bits4;
 
 	out.str("");
 	out.clear();
@@ -308,7 +307,8 @@ void BitsTests::testReadBits(){
 	unsigned int c4 = memcmp(out.str().c_str(), "00101010 00110010 00111010 01000010 01001010 01010010", 48 + 5);
 	CPPUNIT_ASSERT(c4 == 0);
 	CPPUNIT_ASSERT(bits.getPosition() == 7);
-	free(bits5);
+	bits5->clear();
+	delete bits5;
 
 	out.str("");
 	out.clear();
@@ -320,7 +320,8 @@ void BitsTests::testReadBits(){
 	unsigned int c5 = memcmp(out.str().c_str(), "01100100 01110100", 16 + 1);
 	CPPUNIT_ASSERT(c5 == 0);
 	CPPUNIT_ASSERT(bits.getPosition() == 4);
-	free(bits6);
+	bits6->clear();
+	delete bits6;
 
 	Bits bits7;
 	bits7.fromMem(chunk, 1);
@@ -335,7 +336,8 @@ void BitsTests::testReadBits(){
 	unsigned int c6 = memcmp(out.str().c_str(), "10100000", 8);
 	CPPUNIT_ASSERT(c6 == 0);
 	CPPUNIT_ASSERT(bits7.getPosition() == 1);
-	free(bits4);
+	bits8->clear();
+	delete bits8;
 }
 
 void BitsTests::testCompareBinary(){
