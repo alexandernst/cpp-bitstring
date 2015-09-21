@@ -172,6 +172,15 @@ bool Bits::fromMem(unsigned char *chunk, size_t size){
 }
 
 /**
+ *
+ */
+void Bits::clear(){
+	if(this->data != NULL) {
+		free(this->data);
+	}
+}
+
+/**
  * Unload whatever was loaded (if anything was loaded at all).
  * That means that 'data' will be set to NULL  and free-ed if possible*.
  * Also, 'position' and 'max_position' will be set to 0.
@@ -183,7 +192,7 @@ bool Bits::fromMem(unsigned char *chunk, size_t size){
 void Bits::unload(){
 	this->unsetError();
 	if(this->is_from_file){
-		free(this->data);
+		this->clear();
 	}
 
 	this->data = NULL;

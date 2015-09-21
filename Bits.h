@@ -69,6 +69,8 @@ class Bits {
 
 		bool fromMem(unsigned char *chunk, size_t size);
 
+		void clear();
+
 		void unload();
 
 		unsigned char *read(size_t n, bool reverse = false);
