@@ -406,8 +406,8 @@ bool Bits::compareBinary(const char *string, size_t check_n_bits, size_t skip_b_
 		}
 	}
 
-	free(data->data);
-	free(data);
+	data->clear();
+	delete data;
 	free(bin_string);
 
 	return match;
