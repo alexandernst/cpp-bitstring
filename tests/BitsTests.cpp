@@ -21,12 +21,11 @@ void BitsTests::tearDown(){
 
 void BitsTests::testFromFile(){
 	unsigned char chunk[] = "This is a test!";
-	uint64_t size = sizeof(chunk) - 1;
+	size_t size = sizeof(chunk) - 1;
 
 	const char *tplt = "/tmp/cppbitstring.XXXXXX";
-	char *tmpfn = (char *) alloca(strlen(tplt) + 1);
+	char *tmpfn = (char *) calloc(1, strlen(tplt) + 1);
 	memcpy(tmpfn, tplt, strlen(tplt));
-	tmpfn[strlen(tplt) + 1] = '\0';
 
 	ofstream tmpf(tmpfn);
 	CPPUNIT_ASSERT(tmpf.is_open() == true);
@@ -47,12 +46,11 @@ void BitsTests::testFromFile(){
 
 void BitsTests::testToFile(){
 	unsigned char chunk[] = "This is a test!";
-	uint64_t size = sizeof(chunk) - 1;
+	size_t size = sizeof(chunk) - 1;
 
 	const char *tplt = "/tmp/cppbitstring.XXXXXX";
-	char *tmpfn = (char *) alloca(strlen(tplt) + 1);
+	char *tmpfn = (char *) calloc(1, strlen(tplt) + 1);
 	memcpy(tmpfn, tplt, strlen(tplt));
-	tmpfn[strlen(tplt) + 1] = '\0';
 
 	Bits bits;
 	bool readFromFile = bits.fromMem(chunk, size);
@@ -99,7 +97,7 @@ void BitsTests::testToFile(){
 
 void BitsTests::testFromMem(){
 	unsigned char chunk[] = "This is a test!";
-	uint64_t size = sizeof(chunk) - 1;
+	size_t size = sizeof(chunk) - 1;
 
 	Bits bits;
 	bool result = bits.fromMem(chunk, size);
@@ -136,7 +134,7 @@ void BitsTests::testUnload(){
 
 void BitsTests::testRead(){
 	unsigned char chunk[] = "This is a test!";
-	uint64_t size = sizeof(chunk) - 1;
+	size_t size = sizeof(chunk) - 1;
 
 	Bits bits;
 	bits.fromMem(chunk, size);
@@ -159,7 +157,7 @@ void BitsTests::testRead(){
 
 void BitsTests::testRead_uint8(){
 	unsigned char chunk[] = "Th\0is is a test!";
-	uint64_t size = sizeof(chunk) - 1;
+	size_t size = sizeof(chunk) - 1;
 
 	Bits bits;
 	bits.fromMem(chunk, size);
@@ -184,7 +182,7 @@ void BitsTests::testRead_uint8(){
 
 void BitsTests::testRead_uint16(){
 	unsigned char chunk[] = "Th\0\0is is a test!";
-	uint64_t size = sizeof(chunk) - 1;
+	size_t size = sizeof(chunk) - 1;
 
 	Bits bits;
 	bits.fromMem(chunk, size);
@@ -206,7 +204,7 @@ void BitsTests::testRead_uint16(){
 
 void BitsTests::testRead_uint32(){
 	unsigned char chunk[] = "This\0\0\0\0 is a test!";
-	uint64_t size = sizeof(chunk) - 1;
+	size_t size = sizeof(chunk) - 1;
 
 	Bits bits;
 	bits.fromMem(chunk, size);
@@ -228,7 +226,7 @@ void BitsTests::testRead_uint32(){
 
 void BitsTests::testRead_uint64(){
 	unsigned char chunk[] = "This is \0\0\0\0\0\0\0\0a very big test!";
-	uint64_t size = sizeof(chunk) - 1;
+	size_t size = sizeof(chunk) - 1;
 
 	Bits bits;
 	bits.fromMem(chunk, size);
@@ -378,7 +376,7 @@ void BitsTests::testCompareHex(){
 
 void BitsTests::testPeek(){
 	unsigned char chunk[] = "This is a test!";
-	uint64_t size = sizeof(chunk) - 1;
+	size_t size = sizeof(chunk) - 1;
 
 	Bits bits;
 	bits.fromMem(chunk, size);
@@ -399,7 +397,7 @@ void BitsTests::testPeek(){
 
 void BitsTests::testWrite(){
 	unsigned char chunk[] = "This is a test!";
-	uint64_t size = sizeof(chunk) - 1;
+	size_t size = sizeof(chunk) - 1;
 
 	Bits bits;
 	bits.fromMem(chunk, size);
@@ -417,7 +415,7 @@ void BitsTests::testWrite(){
 
 void BitsTests::testSeek(){
 	unsigned char chunk[] = "This is a test!";
-	uint64_t size = sizeof(chunk) - 1;
+	size_t size = sizeof(chunk) - 1;
 
 	Bits bits;
 	bits.fromMem(chunk, size);
@@ -454,7 +452,7 @@ void BitsTests::testSeek(){
 
 void BitsTests::testFindPrevious(){
 	unsigned char chunk[] = "This is a really long test with some 28452 random data in 9352 it!!?";
-	uint64_t size = sizeof(chunk) - 1;
+	size_t size = sizeof(chunk) - 1;
 
 	Bits bits;
 	bits.fromMem(chunk, size);
@@ -485,7 +483,7 @@ void BitsTests::testFindPrevious(){
 
 void BitsTests::testFindNext(){
 	unsigned char chunk[] = "This is a really long test with some 28452 random data in 9352 it!!?";
-	uint64_t size = sizeof(chunk) - 1;
+	size_t size = sizeof(chunk) - 1;
 
 	Bits bits;
 	bits.fromMem(chunk, size);
@@ -509,7 +507,7 @@ void BitsTests::testFindNext(){
 
 void BitsTests::testBit(){
 	unsigned char chunk[] = "This is a test!";
-	uint64_t size = sizeof(chunk) - 1;
+	size_t size = sizeof(chunk) - 1;
 
 	Bits bits;
 	bits.fromMem(chunk, size);
@@ -541,7 +539,7 @@ void BitsTests::testBit(){
 
 void BitsTests::testSetBit(){
 	unsigned char chunk[] = "This is a test!";
-	uint64_t size = sizeof(chunk) - 1;
+	size_t size = sizeof(chunk) - 1;
 
 	Bits bits;
 	bits.fromMem(chunk, size);
@@ -563,7 +561,7 @@ void BitsTests::testSetBit(){
 
 void BitsTests::testUnsetBit(){
 	unsigned char chunk[] = "This is a test!";
-	uint64_t size = sizeof(chunk) - 1;
+	size_t size = sizeof(chunk) - 1;
 
 	Bits bits;
 	bits.fromMem(chunk, size);
@@ -583,7 +581,7 @@ void BitsTests::testUnsetBit(){
 
 void BitsTests::testToggleBit(){
 	unsigned char chunk[] = "This is a test!";
-	uint64_t size = sizeof(chunk) - 1;
+	size_t size = sizeof(chunk) - 1;
 
 	Bits bits;
 	bits.fromMem(chunk, size);
@@ -604,7 +602,7 @@ void BitsTests::testToggleBit(){
 
 void BitsTests::testPrintHash(){
 	unsigned char chunk[] = "This is a test!";
-	uint64_t size = sizeof(chunk) - 1;
+	size_t size = sizeof(chunk) - 1;
 
 	Bits bits;
 	bits.fromMem(chunk, size);
@@ -624,7 +622,7 @@ void BitsTests::testPrintHash(){
 
 void BitsTests::testPrintHex(){
 	unsigned char chunk[] = "This is a test!";
-	uint64_t size = sizeof(chunk) - 1;
+	size_t size = sizeof(chunk) - 1;
 
 	Bits bits;
 	bits.fromMem(chunk, size);
@@ -644,7 +642,7 @@ void BitsTests::testPrintHex(){
 
 void BitsTests::testPrintBits(){
 	unsigned char chunk[] = "This is a test!";
-	uint64_t size = sizeof(chunk) - 1;
+	size_t size = sizeof(chunk) - 1;
 
 	Bits bits;
 	bits.fromMem(chunk, size);

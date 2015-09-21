@@ -11,6 +11,7 @@ Bits::Bits(){
 	this->max_position = 0;
 	this->hash = NULL;
 	this->error = false;
+	this->is_from_file = false;
 }
 
 /**
@@ -351,6 +352,7 @@ Bits *Bits::readBits(size_t n_bits, size_t skip_n_bits){
 	}
 
 	if(this->canMoveForward(bytes_to_read) == false) {
+		delete bits;
 		return NULL;
 	}
 

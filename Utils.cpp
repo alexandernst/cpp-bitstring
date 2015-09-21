@@ -53,7 +53,7 @@ unsigned char *Utils::removeSpaces(const char *string) {
 			*write++ = *read;
 	} while (*read++);
 
-	len = strlen((const char *)  s);
+	len = strlen((const char *) s);
 	unsigned char *s2 = (unsigned char *) calloc(1, len + 1);
 	memcpy(s2, s, len);
 	free(s);
