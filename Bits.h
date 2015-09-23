@@ -19,17 +19,6 @@
 #include <openssl/sha.h>
 #include "Utils.h"
 
-#define BYTETOSTRINGPATTERN "%c%c%c%c%c%c%c%c"
-#define BYTETOSTRING(byte) \
-	byte, \
-	*(&byte + 1), \
-	*(&byte + 2), \
-	*(&byte + 3), \
-	*(&byte + 4), \
-	*(&byte + 5), \
-	*(&byte + 6), \
-	*(&byte + 7)
-
 #define BYTETOBINARYPATTERN "%d%d%d%d%d%d%d%d"
 #define BYTETOBINARY(byte) \
 	(byte & 0x80 ? 1 : 0), \
