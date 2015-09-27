@@ -447,6 +447,7 @@ bool Bits::compareHex(const char *string, size_t check_n_bytes, size_t skip_b_by
 		}
 	}
 
+	free(data);
 	free(hex_string);
 	return match;
 }
@@ -621,7 +622,8 @@ bool Bits::testBit(unsigned int bit){
 		return false;
 	}
 
-	uint8_t byte = (uint8_t) *this->peek(1);
+	uint8_t byte = this->read_uint8();
+	this->seek(1, true);
 	return byte & (1 << bit);
 }
 
@@ -639,7 +641,8 @@ bool Bits::setBit(unsigned int bit){
 		return false;
 	}
 
-	uint8_t byte = (uint8_t) *this->peek(1);
+	uint8_t byte = this->read_uint8();
+	this->seek(1, true);
 	byte |= 1 << bit;
 	this->write(&byte, 1);
 	this->position--;
@@ -661,7 +664,8 @@ bool Bits::unsetBit(unsigned int bit){
 		return false;
 	}
 
-	uint8_t byte = (uint8_t) *this->peek(1);
+	uint8_t byte = this->read_uint8();
+	this->seek(1, true);
 	byte &= ~(1 << bit);
 	this->write(&byte, 1);
 	this->position--;

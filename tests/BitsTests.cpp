@@ -40,8 +40,10 @@ void BitsTests::testFromFile(){
 	unsigned char *f2 = bits.read(2);
 	unsigned int c_f2 = memcmp(f2, "Th", 2);
 	CPPUNIT_ASSERT(c_f2 == 0);
+	free(f2);
 
 	CPPUNIT_ASSERT(remove(tmpfn) == 0);
+	free(tmpfn);
 }
 
 void BitsTests::testToFile(){
@@ -93,6 +95,8 @@ void BitsTests::testToFile(){
 	CPPUNIT_ASSERT(!writeToFile);
 
 	CPPUNIT_ASSERT(remove(tmpfn) == 0);
+
+	free(tmpfn);
 }
 
 void BitsTests::testFromMem(){
@@ -107,14 +111,17 @@ void BitsTests::testFromMem(){
 	unsigned char *f2 = bits.read(2);
 	unsigned int c_f2 = memcmp(f2, "Th", 2);
 	CPPUNIT_ASSERT(c_f2 == 0);
+	free(f2);
 
 	unsigned char *n4 = bits.read(4);
 	unsigned int c_n4 = memcmp(n4, "is i", 4);
 	CPPUNIT_ASSERT(c_n4 == 0);
+	free(n4);
 
 	unsigned char *n1 = bits.read(1);
 	unsigned int c_n1 = memcmp(n1, "s", 1);
 	CPPUNIT_ASSERT(c_n1 == 0);
+	free(n1);
 
 	CPPUNIT_ASSERT(bits.getPosition() == 7);
 }
@@ -144,6 +151,7 @@ void BitsTests::testRead(){
 	unsigned char *n5 = bits.read(5, true);
 	unsigned int c_n5 = memcmp(n5, "!tset", 5);
 	CPPUNIT_ASSERT(c_n5 == 0);
+	free(n5);
 
 	bool s2 = bits.seek(10, true);
 	CPPUNIT_ASSERT(s2);
@@ -151,6 +159,7 @@ void BitsTests::testRead(){
 	unsigned char *n2 = bits.read(2, true);
 	unsigned int c_n2 = memcmp(n2, "si", 2);
 	CPPUNIT_ASSERT(c_n2 == 0);
+	free(n2);
 
 	CPPUNIT_ASSERT(bits.getPosition() == 7);
 }
@@ -387,10 +396,14 @@ void BitsTests::testPeek(){
 	unsigned char *n5 = bits.peek(5, true);
 	unsigned int c_n5 = memcmp(n5, " sihT", 5);
 	CPPUNIT_ASSERT(c_n5 == 0);
+	free(n5);
 
 	unsigned char *n1 = bits.peek(1);
-	unsigned int c_n1 = memcmp(n1, bits.peek(1), 1);
+	unsigned char *n2 = bits.peek(1);
+	unsigned int c_n1 = memcmp(n1, n2, 1);
 	CPPUNIT_ASSERT(c_n1 == 0);
+	free(n1);
+	free(n2);
 
 	CPPUNIT_ASSERT(bits.getPosition() == 0);
 }
@@ -411,6 +424,8 @@ void BitsTests::testWrite(){
 
 	unsigned int c2 = memcmp(bits.getData(), "That string is a test!", size + 7);
 	CPPUNIT_ASSERT(c2 == 0);
+
+	bits.clear();
 }
 
 void BitsTests::testSeek(){
@@ -426,12 +441,14 @@ void BitsTests::testSeek(){
 	unsigned char *n3 = bits.read(3);
 	unsigned int c_n3 = memcmp(n3, "s a", 3);
 	CPPUNIT_ASSERT(c_n3 == 0);
+	free(n3);
 
 	bool s2 = bits.seek(6);
 	CPPUNIT_ASSERT(s2);
 
 	unsigned char *n1 = bits.read(1);
 	CPPUNIT_ASSERT(n1 == NULL);
+	free(n1);
 
 	bool s3 = bits.seek(2, true);
 	CPPUNIT_ASSERT(s3);
@@ -439,6 +456,7 @@ void BitsTests::testSeek(){
 	unsigned char *p2 = bits.read(2);
 	unsigned int c_p2 = memcmp(p2, "t!", 2);
 	CPPUNIT_ASSERT(c_p2 == 0);
+	free(p2);
 
 	bool s4 = bits.seek(15, true);
 	CPPUNIT_ASSERT(s4);
@@ -547,16 +565,20 @@ void BitsTests::testSetBit(){
 	bits.setBit(0);
 	bits.setBit(1);
 
-	unsigned int c1 = memcmp(bits.read(1), "W", 1);
+	unsigned char *c_c1 = bits.read(1);
+	unsigned int c1 = memcmp(c_c1, "W", 1);
 	CPPUNIT_ASSERT(c1 == 0);
+	free(c_c1);
 
 	bits.seek(1);
 
 	bits.setBit(0);
 	bits.setBit(1);
 
-	unsigned int c2 = memcmp(bits.read(1), "k", 1);
+	unsigned char *c_c2 = bits.read(1);
+	unsigned int c2 = memcmp(c_c2, "k", 1);
 	CPPUNIT_ASSERT(c2 == 0);
+	free(c_c2);
 }
 
 void BitsTests::testUnsetBit(){
@@ -568,15 +590,19 @@ void BitsTests::testUnsetBit(){
 
 	bits.unsetBit(4);
 
-	unsigned int c1 = memcmp(bits.read(1), "D", 1);
+	unsigned char *c_c1 = bits.read(1);
+	unsigned int c1 = memcmp(c_c1, "D", 1);
 	CPPUNIT_ASSERT(c1 == 0);
+	free(c_c1);
 
 	bits.seek(1);
 
 	bits.unsetBit(5);
 
-	unsigned int c2 = memcmp(bits.read(1), "I", 1);
+	unsigned char *c_c2 = bits.read(1);
+	unsigned int c2 = memcmp(c_c2, "I", 1);
 	CPPUNIT_ASSERT(c2 == 0);
+	free(c_c2);
 }
 
 void BitsTests::testToggleBit(){
@@ -589,15 +615,19 @@ void BitsTests::testToggleBit(){
 	bits.toggleBit(0);
 	bits.toggleBit(1);
 
-	unsigned int c1 = memcmp(bits.read(1), "W", 1);
+	unsigned char *c_c1 = bits.read(1);
+	unsigned int c1 = memcmp(c_c1, "W", 1);
 	CPPUNIT_ASSERT(c1 == 0);
+	free(c_c1);
 
 	bits.seek(7);
 
 	bits.unsetBit(0);
 
-	unsigned int c2 = memcmp(bits.read(1), "`", 1);
+	unsigned char *c_c2 = bits.read(1);
+	unsigned int c2 = memcmp(c_c2, "`", 1);
 	CPPUNIT_ASSERT(c2 == 0);
+	free(c_c2);
 }
 
 void BitsTests::testPrintHash(){
