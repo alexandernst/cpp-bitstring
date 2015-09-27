@@ -71,6 +71,7 @@ void BitsTests::testToFile(){
 	writeToFile = bits.toFile(tmpfn, 14, 1);
 	CPPUNIT_ASSERT(writeToFile);
 
+	bits2.clear();
 	readFromFile = bits2.fromFile(tmpfn);
 	CPPUNIT_ASSERT(readFromFile);
 	CPPUNIT_ASSERT(bits2.getMaxPosition() == 1);
