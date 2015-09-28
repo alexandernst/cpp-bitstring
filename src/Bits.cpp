@@ -325,7 +325,7 @@ uint64_t Bits::read_uint64(bool reverse){
  * Read bits and, optionaly, skip bits from the start. The cursor will be moved by as many bytes as the round up of the (bits to read / 8) and the (bits to skip / 8).
  * @param n_bits Number of bits to read
  * @param skip_n_bits Number of bits to skip from the start. Default 0.
- * @return bit_data struct containing the readed bits. Note that if there are no enough bytes to read, the `data` field will be NULL and the `length` will be 0.
+ * @return Bits objec containing the readed bits. Note that if there are no enough bytes to read, the object will be mapped to a 0 length data chunk.
  */
 Bits *Bits::readBits(size_t n_bits, size_t skip_n_bits){
 	this->unsetError();

@@ -33,10 +33,6 @@
 using namespace std;
 
 typedef unsigned char byte;
-typedef struct bit_data {
-	byte *data;
-	size_t length;
-} bit_data;
 
 class Bits {
 

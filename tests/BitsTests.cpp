@@ -1,6 +1,6 @@
 #include "BitsTests.h"
-#include "Bits.h"
-#include "Utils.h"
+#include "src/Bits.h"
+#include "src/Utils.h"
 using namespace std;
 
 CPPUNIT_TEST_SUITE_REGISTRATION(BitsTests);
