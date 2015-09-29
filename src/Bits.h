@@ -32,8 +32,6 @@
 
 using namespace std;
 
-typedef unsigned char byte;
-
 class Bits {
 
 	public:

@@ -400,9 +400,9 @@ bool Bits::compareBinary(const char *string, size_t check_n_bits, size_t skip_b_
 		int bits_to_compare = i + 1 == bytes ? last_bits : 8;
 
 		uint8_t c = data->read_uint8();
-		sprintf((char *) &tmp_bin_repr, BYTETOBINARYPATTERN, BYTETOBINARY(c));
+		sprintf(tmp_bin_repr, BYTETOBINARYPATTERN, BYTETOBINARY(c));
 		for(int j = 0; j < bits_to_compare; j++) {
-			tmp_bin_repr_2[j] = *(&(bin_string[i * 8]) + j);
+			tmp_bin_repr_2[j] = bin_string[i * 8 + j];
 		}
 
 		if(memcmp((const char *) tmp_bin_repr + skip_bits_if_last, (const char *) tmp_bin_repr_2, bits_to_compare) != 0) {
@@ -429,7 +429,7 @@ bool Bits::compareHex(const char *string, size_t check_n_bytes, size_t skip_b_by
 	bool match = true;
 	if(this->canMoveForward(check_n_bytes) == false) return false;
 
-	byte *data = this->read(check_n_bytes);
+	unsigned char *data = this->read(check_n_bytes);
 
 	unsigned char *hex_string = Utils::removeSpaces(string);
 	size_t len = strlen((const char *) hex_string);

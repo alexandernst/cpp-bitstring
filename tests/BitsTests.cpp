@@ -259,7 +259,7 @@ void BitsTests::testRead_uint64(){
 }
 
 void BitsTests::testReadBits(){
-	byte chunk[] = "EFGHIJK";
+	unsigned char chunk[] = "EFGHIJK";
 	size_t size = sizeof(chunk) - 1;
 	ostringstream out;
 	streambuf *orig_buf = cout.rdbuf();
@@ -351,7 +351,7 @@ void BitsTests::testReadBits(){
 }
 
 void BitsTests::testCompareBinary(){
-	byte chunk[] = "This";
+	unsigned char chunk[] = "This";
 	size_t size = sizeof(chunk) - 1;
 
 	Bits bits;
@@ -368,7 +368,7 @@ void BitsTests::testCompareBinary(){
 }
 
 void BitsTests::testCompareHex(){
-	byte chunk[] = "This";
+	unsigned char chunk[] = "This";
 	size_t size = sizeof(chunk) - 1;
 
 	Bits bits;
