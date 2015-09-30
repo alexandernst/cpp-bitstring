@@ -377,35 +377,43 @@ Bits *Bits::readBits(size_t n_bits, size_t skip_n_bits){
  * @param size_t Number of bits to skip.
  * @return True if data is equal to the given binary represenntation.
  */
-bool Bits::compareBinary(const char *string, size_t check_n_bits, size_t skip_b_bits){
+bool Bits::compareBinary(const char *string, size_t check_n_bits, size_t skip_n_bits){
 	bool match = true;
 
+	/*
+	 * Check how many bytes must be read. Note that 9 bits are still 2 bytes.
+	 * This doesn't take into account the number of bits that must be skipped.
+	 */
 	size_t bytes = (check_n_bits + 7) / 8;
-	size_t bytes_with_skip = (check_n_bits + skip_b_bits + 7) / 8;
+
+	/*
+	 * Check how many bytes must be read. This does take into account the number
+	 * of bits that must be skipped, so reading 15 bits and skipping 2 bits should
+	 * give 3 bytes.
+	 */
+	size_t bytes_with_skip = (check_n_bits + skip_n_bits + 7) / 8;
+
+	/*
+	 * Check if there are enough bytes to read.
+	 */
 	if(this->canMoveForward(bytes_with_skip) == false) return false;
 
-	Bits *data = this->readBits(check_n_bits, skip_b_bits);
+	Bits *data = this->readBits(check_n_bits, skip_n_bits);
 
 	unsigned char *bin_string = Utils::removeSpaces(string);
 	size_t len = strlen((const char *) bin_string);
 	if(Utils::isValidBinString(bin_string) || len < check_n_bits) return false;
 
-	unsigned int last_bits = check_n_bits <= 8 ? check_n_bits : (bytes * 8) - check_n_bits;
-	last_bits = last_bits == 0 ? 8 : last_bits;
+	char tmp_bin_repr[9];
 
-	char tmp_bin_repr[9], tmp_bin_repr_2[9];
-
-	for(size_t i = 0; i < bytes ; i++) {
-		int skip_bits_if_last = i + 1 == bytes ? (8 - last_bits) : 0;
-		int bits_to_compare = i + 1 == bytes ? last_bits : 8;
+	for(size_t i = 0; i < bytes; i++) {
+		int chars_to_compare = i + 1 == bytes ? check_n_bits % 8 : 8;
+		chars_to_compare = chars_to_compare = 0 ? 8 : chars_to_compare;
 
 		uint8_t c = data->read_uint8();
 		sprintf(tmp_bin_repr, BYTETOBINARYPATTERN, BYTETOBINARY(c));
-		for(int j = 0; j < bits_to_compare; j++) {
-			tmp_bin_repr_2[j] = bin_string[i * 8 + j];
-		}
 
-		if(memcmp((const char *) tmp_bin_repr + skip_bits_if_last, (const char *) tmp_bin_repr_2, bits_to_compare) != 0) {
+		if(memcmp(tmp_bin_repr, &bin_string[i * 8], chars_to_compare) != 0) {
 			match = false;
 			break;
 		}
