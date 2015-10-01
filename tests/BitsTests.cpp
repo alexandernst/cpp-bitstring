@@ -360,9 +360,11 @@ void BitsTests::testCompareBinary(){
 	bool res = bits.compareBinary("01010100", 8);
 	CPPUNIT_ASSERT(res);
 
+	bits.setPosition(1);
 	bool res2 = bits.compareBinary("000", 3, 5);
 	CPPUNIT_ASSERT(res2);
 
+	bits.setPosition(2);
 	bool res3 = bits.compareBinary("01101001 01110011", 16);
 	CPPUNIT_ASSERT(res3);
 

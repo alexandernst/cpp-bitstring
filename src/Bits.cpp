@@ -398,11 +398,19 @@ bool Bits::compareBinary(const char *string, size_t check_n_bits, size_t skip_n_
 	 */
 	if(this->canMoveForward(bytes_with_skip) == false) return false;
 
-	Bits *data = this->readBits(check_n_bits, skip_n_bits);
-
 	unsigned char *bin_string = Utils::removeSpaces(string);
 	size_t len = strlen((const char *) bin_string);
-	if(Utils::isValidBinString(bin_string) || len < check_n_bits) return false;
+	if(Utils::isValidBinString(bin_string) || len < check_n_bits) {
+		free(bin_string);
+		return false;
+	}
+
+	/*
+	 * Save the current position.
+	 */
+	size_t pos = this->getPosition();
+
+	Bits *data = this->readBits(check_n_bits, skip_n_bits);
 
 	char tmp_bin_repr[9];
 
@@ -423,33 +431,53 @@ bool Bits::compareBinary(const char *string, size_t check_n_bits, size_t skip_n_
 	delete data;
 	free(bin_string);
 
+	/*
+	 * Restore the position in which the cursor was before the compare process.
+	 */
+	this->setPosition(pos);
+
 	return match;
 }
 
 /**
- * Compare a chunk of data with an hexadecimal representation of each byte. The cursor will be moved by as many bytes as the sum of the bytes to read and the bytes to skip.
+ * Compare a chunk of data with an hexadecimal representation of each byte. The cursor won't be moved.
  * @param string a hexadecimal representation of the tested data. Might contain spaces, but must be uppercase.
  * @param size_t Number of bytes to read.
  * @param size_t Number of bytes to skip.
  * @return True if data is equal to the given hex represenntation.
  */
-bool Bits::compareHex(const char *string, size_t check_n_bytes, size_t skip_b_bytes){
+bool Bits::compareHex(const char *string, size_t check_n_bytes, size_t skip_n_bytes){
 	bool match = true;
+	/*
+	 * Check if there are enough bytes to read.
+	 */
 	if(this->canMoveForward(check_n_bytes) == false) return false;
-
-	unsigned char *data = this->read(check_n_bytes);
 
 	unsigned char *hex_string = Utils::removeSpaces(string);
 	size_t len = strlen((const char *) hex_string);
-	if(Utils::isValidBinString(hex_string) || len < check_n_bytes * 2) return false;
 
-	char tmp_hex_repr[3], tmp_hex_repr_2[3];
+	/*
+	 * If the received string is not a valid hex representation, quit.
+	 */
+	if(Utils::isValidBinString(hex_string) || len < check_n_bytes * 2) {
+		free(hex_string);
+		return false;
+	}
+
+	/*
+	 * Save the current position.
+	 */
+	size_t pos = this->getPosition();
+
+	this->seek(skip_n_bytes);
+	unsigned char *data = this->read(check_n_bytes);
+
+	char tmp_hex_repr[3];
 
 	for(size_t i = 0; i < check_n_bytes; i++) {
 		sprintf((char *) &tmp_hex_repr, "%X", data[i]);
-		sprintf((char *) &tmp_hex_repr_2, "%c%c", hex_string[i * 2], hex_string[(i * 2) + 1]);
 
-		if(strncmp((const char *) tmp_hex_repr, (const char *) tmp_hex_repr_2, 2) != 0) {
+		if(memcmp(tmp_hex_repr, &hex_string[i * 2], 2) != 0) {
 			match = false;
 			break;
 		}
@@ -457,6 +485,12 @@ bool Bits::compareHex(const char *string, size_t check_n_bytes, size_t skip_b_by
 
 	free(data);
 	free(hex_string);
+
+	/*
+	 * Restore the position in which the cursor was before the compare process.
+	 */
+	this->setPosition(pos);
+
 	return match;
 }
 
