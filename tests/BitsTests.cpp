@@ -269,7 +269,7 @@ void BitsTests::testReadBits(){
 
 	Bits *bits2 = bits.readBits(56);
 	cout.rdbuf(out.rdbuf());
-	bits2->printBits(1);
+	bits2->printAsBinary(1);
 	cout.rdbuf(orig_buf);
 	unsigned int c1 = memcmp(out.str().c_str(), "01000101", 8);
 	CPPUNIT_ASSERT(c1 == 0);
@@ -279,7 +279,7 @@ void BitsTests::testReadBits(){
 	out.clear();
 	bits2->setPosition(2);
 	cout.rdbuf(out.rdbuf());
-	bits2->printBits(1);
+	bits2->printAsBinary(1);
 	cout.rdbuf(orig_buf);
 	unsigned int c2 = memcmp(out.str().c_str(), "01000111", 8);
 	CPPUNIT_ASSERT(c2 == 0);
@@ -299,7 +299,7 @@ void BitsTests::testReadBits(){
 	bits.setPosition(0);
 	Bits *bits4 = bits.readBits(8, 4);
 	cout.rdbuf(out.rdbuf());
-	bits4->printBits(1);
+	bits4->printAsBinary(1);
 	cout.rdbuf(orig_buf);
 	unsigned int c3 = memcmp(out.str().c_str(), "01010100", 8);
 	CPPUNIT_ASSERT(c3 == 0);
@@ -312,7 +312,7 @@ void BitsTests::testReadBits(){
 	bits.setPosition(0);
 	cout.rdbuf(out.rdbuf());
 	Bits *bits5 = bits.readBits(48, 3);
-	bits5->printBits(6);
+	bits5->printAsBinary(6);
 	cout.rdbuf(orig_buf);
 	unsigned int c4 = memcmp(out.str().c_str(), "00101010 00110010 00111010 01000010 01001010 01010010", 48 + 5);
 	CPPUNIT_ASSERT(c4 == 0);
@@ -325,7 +325,7 @@ void BitsTests::testReadBits(){
 	bits.setPosition(0);
 	Bits *bits6 = bits.readBits(16, 12);
 	cout.rdbuf(out.rdbuf());
-	bits6->printBits(2);
+	bits6->printAsBinary(2);
 	cout.rdbuf(orig_buf);
 	unsigned int c5 = memcmp(out.str().c_str(), "01100100 01110100", 16 + 1);
 	CPPUNIT_ASSERT(c5 == 0);
@@ -341,7 +341,7 @@ void BitsTests::testReadBits(){
 	Bits *bits8 = bits7.readBits(3, 5);
 	CPPUNIT_ASSERT(bits8 != NULL);
 	cout.rdbuf(out.rdbuf());
-	bits8->printBits(1);
+	bits8->printAsBinary(1);
 	cout.rdbuf(orig_buf);
 	unsigned int c6 = memcmp(out.str().c_str(), "10100000", 8);
 	CPPUNIT_ASSERT(c6 == 0);
@@ -672,7 +672,7 @@ void BitsTests::testPrintHex(){
 	ostringstream out;
 	streambuf *orig_buf(cout.rdbuf(out.rdbuf()));
 
-	bits.printHex(size);
+	bits.printAsHex(size);
 
 	//Restore cout
 	cout.rdbuf(orig_buf);
@@ -692,7 +692,7 @@ void BitsTests::testPrintBits(){
 	ostringstream out;
 	streambuf *orig_buf(cout.rdbuf(out.rdbuf()));
 
-	bits.printBits(2);
+	bits.printAsBinary(2);
 
 	//Restore cout
 	cout.rdbuf(orig_buf);

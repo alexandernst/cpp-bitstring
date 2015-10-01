@@ -718,7 +718,7 @@ void Bits::printHash(){
  * Print N bytes starting from the current position, in a hexadecimal representation. Nothing will be printed if the requested number of bytes is bigger than the remaining data. Cursor won't be moved.
  * @param n Number of bytes to print.
  */
-void Bits::printHex(size_t n){
+void Bits::printAsHex(size_t n){
 	this->unsetError();
 	if(this->canMoveForward(n) == false) return;
 	unsigned char *c;
@@ -735,10 +735,10 @@ void Bits::printHex(size_t n){
 }
 
 /**
- * Print N bytes starting from the current position, each byte in it's bits representation. Nothing will be printed if the requested number of bytes is bigger than the remaining data. Cursor won't be moved.
+ * Print N bytes starting from the current position, each byte in it's binary representation. Nothing will be printed if the requested number of bytes is bigger than the remaining data. Cursor won't be moved.
  * @param n Number of bytes to print.
  */
-void Bits::printBits(size_t n){
+void Bits::printAsBinary(size_t n){
 	this->unsetError();
 	if(this->canMoveForward(n) == false) return;
 	unsigned char *c;

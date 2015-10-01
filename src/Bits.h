@@ -92,9 +92,9 @@ class Bits {
 
 		void printHash();
 
-		void printHex(size_t n);
+		void printAsHex(size_t n);
 
-		void printBits(size_t n);
+		void printAsBinary(size_t n);
 
 		unsigned char *getData();
 
