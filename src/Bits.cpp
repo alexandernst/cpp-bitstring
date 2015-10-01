@@ -502,6 +502,9 @@ bool Bits::compareHex(const char *string, size_t check_n_bytes, size_t skip_n_by
  */
 unsigned char *Bits::peek(size_t n, bool reverse){
 	this->unsetError();
+
+	if(n == 0) return NULL;
+
 	if(!this->canMoveForward(n)){
 		this->setError();
 		return NULL;
@@ -569,6 +572,7 @@ bool Bits::write(unsigned char *chunk, size_t n, bool patch){
  */
 bool Bits::seek(size_t n, bool reverse){
 	this->unsetError();
+
 	if(n == 0) return true;
 
 	if(!reverse && this->canMoveForward(n)){
