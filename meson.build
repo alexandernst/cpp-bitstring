@@ -1,5 +1,7 @@
 project('cpp-bitstring', 'cpp')
 add_global_arguments('-std=c++11', language : 'cpp')
+add_global_arguments('-Wall', language : 'cpp')
+add_global_arguments('-Wextra', language : 'cpp')
 
 #subdir('tests')
 
