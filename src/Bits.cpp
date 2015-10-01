@@ -408,7 +408,7 @@ bool Bits::compareBinary(const char *string, size_t check_n_bits, size_t skip_n_
 
 	for(size_t i = 0; i < bytes; i++) {
 		int chars_to_compare = i + 1 == bytes ? check_n_bits % 8 : 8;
-		chars_to_compare = chars_to_compare = 0 ? 8 : chars_to_compare;
+		chars_to_compare = chars_to_compare == 0 ? 8 : chars_to_compare;
 
 		uint8_t c = data->read_uint8();
 		sprintf(tmp_bin_repr, BYTETOBINARYPATTERN, BYTETOBINARY(c));
