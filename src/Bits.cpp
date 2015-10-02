@@ -32,7 +32,7 @@ bool Bits::canMoveBackwards(size_t n){
 		return false;
 	}
 
-	return (this->position + n) >= 0;
+	return this->position >= n;
 }
 
 /**
@@ -121,7 +121,7 @@ bool Bits::toFile(char *fname, size_t offset, size_t size, ios_base::openmode mo
 		goto err;
 	}
 
-	if(offset > this->max_position || offset < 0){
+	if(offset > this->max_position){
 		this->setError();
 		goto err;
 	}
@@ -371,7 +371,7 @@ Bits *Bits::readBits(size_t n_bits, size_t skip_n_bits){
 }
 
 /**
- * Compare a chunk of data with an binary representation of each bit. The cursor will be moved by as many bytes as the round up of the (bits to read / 8) and the (bits to skip / 8).
+ * Compare a chunk of data with an binary representation of each bit. The cursor won't be moved.
  * @param string a hexadecimal representation of the tested data. Might contain spaces, but must be uppercase.
  * @param size_t Number of bits to read.
  * @param size_t Number of bits to skip.
