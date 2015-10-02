@@ -23,26 +23,30 @@ Bits::~Bits(){
 
 /**
  * Check if the cursor can go back more than N bytes.
- * @param n Bytes to move backwards
+ * @param n_bytes Number of bytes to move backwards
  * @return True if possible, false otherwise.
  */
-bool Bits::canMoveBackwards(size_t n){
+bool Bits::canMoveBackwards(size_t n_bytes){
 	this->unsetError();
-	if(this->position == 0 || this->position < n){
-		return false;
-	}
 
-	return this->position >= n;
+	if(n_bytes == 0) return true;
+	if(this->position == 0) return false;
+
+	return this->position >= n_bytes;
 }
 
 /**
  * Check if the cursor can go forward more than N bytes.
- * @param n Bytes to move forward.
+ * @param n_bytes Number of bytes to move forward.
  * @return True if possible, false otherwise.
  */
-bool Bits::canMoveForward(size_t n){
+bool Bits::canMoveForward(size_t n_bytes){
 	this->unsetError();
-	return (this->position + n) <= this->max_position;
+
+	if(n_bytes == 0) return true;
+	if(this->position == this->max_position) return false;
+
+	return (this->position + n_bytes) <= this->max_position;
 }
 
 /**

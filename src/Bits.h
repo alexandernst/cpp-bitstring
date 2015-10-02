@@ -40,9 +40,9 @@ class Bits {
 
 		virtual ~Bits();
 
-		bool canMoveBackwards(size_t n = 1);
+		bool canMoveBackwards(size_t n_bytes = 1);
 
-		bool canMoveForward(size_t n = 1);
+		bool canMoveForward(size_t n_bytes = 1);
 
 		bool checkIfError();
 
