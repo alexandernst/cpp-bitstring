@@ -1,22 +1,12 @@
 #include "Utils.h"
 using namespace std;
 
-bool Utils::isValidHexChar(char c) {
-	return (isalpha(c) && isupper(c)) || isdigit(c);
-}
-
-bool Utils::isValidBinChar(char c) {
-	return c == '0' || c == '1';
-}
-
-bool Utils::isValidHexString(unsigned char *string) {
+bool Utils::isValidBinString(unsigned char *string) {
 	bool valid = true;
 	size_t len = strlen((const char *) string);
 
-	if(len % 8 != 0) return false;
-
 	for(size_t i = 0; i < len; i++) {
-		if(Utils::isValidBinChar(string[i])) {
+		if(string[i] != '0' && string[i] != '1') {
 			valid = false;
 			break;
 		}
@@ -25,14 +15,14 @@ bool Utils::isValidHexString(unsigned char *string) {
 	return valid;
 }
 
-bool Utils::isValidBinString(unsigned char *string) {
+bool Utils::isValidHexString(unsigned char *string) {
 	bool valid = true;
 	size_t len = strlen((const char *) string);
 
 	if(len % 2 != 0) return false;
 
 	for(size_t i = 0; i < len; i++) {
-		if(Utils::isValidHexChar(string[i])) {
+		if( (string[i] < 65 && string[i] > 70) && !isdigit(string[i]) ) {
 			valid = false;
 			break;
 		}

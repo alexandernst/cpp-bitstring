@@ -372,9 +372,14 @@ void BitsTests::testCompareBinary(){
 	bool res4 = bits.compareBinary("01010100 01101000 01", 18);
 	CPPUNIT_ASSERT(res4);
 
-	bits.setPosition(0);
 	bool res5 = bits.compareBinary("01010001 10100001 10", 18, 2);
 	CPPUNIT_ASSERT(res5);
+
+	bool res6 = bits.compareBinary("2", 1);
+	CPPUNIT_ASSERT(res6 == false);
+
+	bool res7 = bits.compareBinary("01", 3);
+	CPPUNIT_ASSERT(res7 == false);
 }
 
 void BitsTests::testCompareHex(){
@@ -387,13 +392,14 @@ void BitsTests::testCompareHex(){
 	bool res = bits.compareHex("54 68 69 73", 4);
 	CPPUNIT_ASSERT(res);
 
-	bits.seek(4, true);
 	bool res2 = bits.compareHex("546869XX", 3);
 	CPPUNIT_ASSERT(res2);
 
-	bits.seek(3, true);
 	bool res3 = bits.compareHex("546869XX", 4);
 	CPPUNIT_ASSERT(res3 == false);
+
+	bool res4 = bits.compareHex("54", 3);
+	CPPUNIT_ASSERT(res4 == false);
 }
 
 void BitsTests::testPeek(){

@@ -1,7 +1,7 @@
 #include "Bits.h"
 using namespace std;
 
-/**
+/*
  * Create a new object of Bits. 'data' will be set to NULL.
  * 'position' and 'max_position' will be set to 0.
  */
@@ -14,14 +14,14 @@ Bits::Bits(){
 	this->is_from_file = false;
 }
 
-/**
+/*
  * Destroying the Bits object will call 'unload()'.
  */
 Bits::~Bits(){
 	this->unload();
 }
 
-/**
+/*
  * Check if the cursor can go back more than N bytes.
  * @param n_bytes Number of bytes to move backwards
  * @return True if possible, false otherwise.
@@ -404,7 +404,7 @@ bool Bits::compareBinary(const char *string, size_t check_n_bits, size_t skip_n_
 
 	unsigned char *bin_string = Utils::removeSpaces(string);
 	size_t len = strlen((const char *) bin_string);
-	if(Utils::isValidBinString(bin_string) || len < check_n_bits) {
+	if(!Utils::isValidBinString(bin_string) || len < check_n_bits) {
 		free(bin_string);
 		return false;
 	}
@@ -463,7 +463,7 @@ bool Bits::compareHex(const char *string, size_t check_n_bytes, size_t skip_n_by
 	/*
 	 * If the received string is not a valid hex representation, quit.
 	 */
-	if(Utils::isValidBinString(hex_string) || len < check_n_bytes * 2) {
+	if(!Utils::isValidHexString(hex_string) || len < check_n_bytes * 2) {
 		free(hex_string);
 		return false;
 	}
