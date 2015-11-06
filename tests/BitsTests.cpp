@@ -132,18 +132,6 @@ void BitsTests::testFromMem(){
 	CPPUNIT_ASSERT(bits->getPosition() == 7);
 }
 
-void BitsTests::testDestroy(){
-	uint64_t size = 10;
-	unsigned char *chunk = (unsigned char *) alloca(size);
-
-	Bits *bits = new Bits(chunk, size);
-	delete bits;
-
-	CPPUNIT_ASSERT(bits->getData() == NULL);
-	CPPUNIT_ASSERT(bits->getMaxPosition() == 0);
-	CPPUNIT_ASSERT(bits->getPosition() == 0);
-}
-
 void BitsTests::testRead(){
 	unsigned char chunk[] = "This is a test!";
 	size_t size = sizeof(chunk) - 1;

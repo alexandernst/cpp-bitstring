@@ -41,8 +41,6 @@ Bits::~Bits(){
 	if(this->hash != NULL){
 		free(this->hash);
 	}
-
-	this->init();
 }
 
 /*
