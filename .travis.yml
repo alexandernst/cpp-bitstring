@@ -33,7 +33,6 @@ script:
     - python3.4 /home/`whoami`/meson/bin/meson `echo $p`
     - ninja
     - ./unittests
-    - exit $?
 
 deploy:
     provider: releases
