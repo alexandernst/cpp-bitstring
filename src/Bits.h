@@ -19,24 +19,15 @@
 #include <openssl/sha.h>
 #include "Utils.h"
 
-#define BYTETOBINARYPATTERN "%d%d%d%d%d%d%d%d"
-#define BYTETOBINARY(byte) \
-	(byte & 0x80 ? 1 : 0), \
-	(byte & 0x40 ? 1 : 0), \
-	(byte & 0x20 ? 1 : 0), \
-	(byte & 0x10 ? 1 : 0), \
-	(byte & 0x08 ? 1 : 0), \
-	(byte & 0x04 ? 1 : 0), \
-	(byte & 0x02 ? 1 : 0), \
-	(byte & 0x01 ? 1 : 0)
-
 using namespace std;
 
 class Bits {
 
 	public:
 
-		Bits();
+		Bits(char *fname = NULL, ios_base::openmode mode = ios::in | ios::binary);
+
+		Bits(unsigned char *chunk, size_t size);
 
 		virtual ~Bits();
 
@@ -46,11 +37,7 @@ class Bits {
 
 		bool checkIfError();
 
-		bool fromFile(char *fname = NULL, ios_base::openmode mode = ios::in | ios::binary);
-
 		bool toFile(char *fname = NULL, size_t offset = 0, size_t size = 0, ios_base::openmode mode = ios::out | ios::binary | ios::trunc);
-
-		bool fromMem(unsigned char *chunk, size_t size);
 
 		void clear();
 
@@ -111,6 +98,10 @@ class Bits {
 		bool is_from_file, error;
 		unsigned char *data, *hash;
 		size_t position, max_position;
+
+		void init();
+		bool fromFile(char *fname = NULL, ios_base::openmode mode = ios::in | ios::binary);
+		bool fromMem(unsigned char *chunk, size_t size);
 
 		void unsetError();
 		void setError();

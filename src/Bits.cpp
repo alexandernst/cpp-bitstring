@@ -1,11 +1,21 @@
 #include "Bits.h"
 using namespace std;
 
+Bits::Bits(char *fname, ios_base::openmode mode) {
+	this->init();
+	this->fromFile(fname, mode);
+}
+
+Bits::Bits(unsigned char *chunk, size_t size) {
+	this->init();
+	this->fromMem(chunk, size);
+}
+
 /*
  * Create a new object of Bits. 'data' will be set to NULL.
  * 'position' and 'max_position' will be set to 0.
  */
-Bits::Bits(){
+void Bits::init() {
 	this->data = NULL;
 	this->position = 0;
 	this->max_position = 0;
@@ -15,10 +25,24 @@ Bits::Bits(){
 }
 
 /*
- * Destroying the Bits object will call 'unload()'.
+ * Unload whatever was loaded (if anything was loaded at all).
+ * That means that 'data' will be set to NULL  and free-ed if possible*.
+ * Also, 'position' and 'max_position' will be set to 0.
+ *
+ * If possible means that the data will be free-ed if it was malloc-ed in the
+ * first place (if the data was loaded from a file). If the data was loaded
+ * from a chunk of memory, it won't be free-ed, so take care of it!
  */
 Bits::~Bits(){
-	this->unload();
+	if(this->is_from_file && this->data != NULL){
+		free(this->data);
+	}
+
+	if(this->hash != NULL){
+		free(this->hash);
+	}
+
+	this->init();
 }
 
 /*
@@ -173,41 +197,6 @@ bool Bits::fromMem(unsigned char *chunk, size_t size){
 		this->max_position = size;
 		this->is_from_file = false;
 		return true;
-	}
-}
-
-/**
- *
- */
-void Bits::clear(){
-	if(this->data != NULL) {
-		free(this->data);
-	}
-}
-
-/**
- * Unload whatever was loaded (if anything was loaded at all).
- * That means that 'data' will be set to NULL  and free-ed if possible*.
- * Also, 'position' and 'max_position' will be set to 0.
- *
- * If possible means that the data will be free-ed if it was malloc-ed in the
- * first place (if the data was loaded from a file). If the data was loaded
- * from a chunk of memory, it won't be free-ed, so take care of it!
- */
-void Bits::unload(){
-	this->unsetError();
-	if(this->is_from_file){
-		this->clear();
-	}
-
-	this->data = NULL;
-	this->position = 0;
-	this->max_position = 0;
-	this->is_from_file = false;
-
-	if(this->hash != NULL){
-		free(this->hash);
-		this->hash = NULL;
 	}
 }
 
@@ -423,7 +412,10 @@ bool Bits::compareBinary(const char *string, size_t check_n_bits, size_t skip_n_
 		chars_to_compare = chars_to_compare == 0 ? 8 : chars_to_compare;
 
 		uint8_t c = data->read_uint8();
-		sprintf(tmp_bin_repr, BYTETOBINARYPATTERN, BYTETOBINARY(c));
+
+		//Convert c to binary representation with dark magic
+		*(unsigned long long*)tmp_bin_repr = 0x3030303030303030ULL +
+		(((c * 0x8040201008040201ULL) >> 7) & 0x0101010101010101ULL);
 
 		if(memcmp(tmp_bin_repr, &bin_string[i * 8], chars_to_compare) != 0) {
 			match = false;
@@ -431,7 +423,6 @@ bool Bits::compareBinary(const char *string, size_t check_n_bits, size_t skip_n_
 		}
 	}
 
-	data->clear();
 	delete data;
 	free(bin_string);
 
