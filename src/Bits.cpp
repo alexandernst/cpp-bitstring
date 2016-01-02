@@ -94,37 +94,37 @@ bool Bits::fromFile(char *fname, ios_base::openmode mode){
 
 	if(fname == NULL){
 		this->setError();
-		goto err;
+		return state;
 	}
 
 	file.open(fname, mode);
-	if(file.is_open()){
-		file.seekg(0, ios::end);
-		size = file.tellg();
-
-		if(size == -1){
-			this->setError();
-			goto err;
-		}
-
-		this->data = (unsigned char *) malloc(size);
-		if(this->data == NULL){
-			this->setError();
-			goto err;
-		}
-
-		this->position = 0;
-		this->max_position = size;
-		this->is_from_file = true;
-
-		file.seekg(0, ios::beg);
-		file.read((char *) data, size);
-		file.close();
-
-		state = true;
+	if(!file.is_open()){
+		this->setError();
+		return state;
 	}
 
-	err:
+	file.seekg(0, ios::end);
+	size = file.tellg();
+
+	if(size == -1){
+		this->setError();
+		return state;
+	}
+
+	this->data = (unsigned char *) malloc(size);
+	if(this->data == NULL){
+		this->setError();
+		return state;
+	}
+
+	this->position = 0;
+	this->max_position = size;
+	this->is_from_file = true;
+
+	file.seekg(0, ios::beg);
+	file.read((char *) data, size);
+	file.close();
+	state = true;
 
 	return state;
 }
@@ -144,12 +144,12 @@ bool Bits::toFile(char *fname, size_t offset, size_t size, ios_base::openmode mo
 
 	if(fname == NULL){
 		this->setError();
-		goto err;
+		return state;
 	}
 
 	if(offset > this->max_position){
 		this->setError();
-		goto err;
+		return state;
 	}
 
 	if(offset == 0 && size == 0){
@@ -160,20 +160,19 @@ bool Bits::toFile(char *fname, size_t offset, size_t size, ios_base::openmode mo
 
 	if(this->max_position < offset + size){
 		this->setError();
-		goto err;
+		return state;
 	}
 
 	file.open(fname, mode);
-	if(file.is_open()){
-		file.seekp(0, ios::beg);
-		file.write((const char *) this->data + offset, size);
-		file.close();
-		state = true;
-	}else{
-		goto err;
+	if(!file.is_open()){
+		this->setError();
+		return state;
 	}
 
-	err:
+	file.seekp(0, ios::beg);
+	file.write((const char *) this->data + offset, size);
+	file.close();
+	state = true;
 
 	return state;
 }
