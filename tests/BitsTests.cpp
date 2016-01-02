@@ -267,7 +267,6 @@ void BitsTests::testReadBits(){
 	Bits *bits = new Bits(chunk, size);
 
 	Bits *bits2 = bits->readBits(56);
-	bits2->autoFreeMem(true);
 	cout.rdbuf(out.rdbuf());
 	bits2->printAsBinary(1);
 	cout.rdbuf(orig_buf);
@@ -298,7 +297,6 @@ void BitsTests::testReadBits(){
 	out.clear();
 	bits->setPosition(0);
 	Bits *bits4 = bits->readBits(8, 4);
-	bits4->autoFreeMem(true);
 	cout.rdbuf(out.rdbuf());
 	bits4->printAsBinary(1);
 	cout.rdbuf(orig_buf);
@@ -312,7 +310,6 @@ void BitsTests::testReadBits(){
 	bits->setPosition(0);
 	cout.rdbuf(out.rdbuf());
 	Bits *bits5 = bits->readBits(48, 3);
-	bits5->autoFreeMem(true);
 	bits5->printAsBinary(6);
 	cout.rdbuf(orig_buf);
 	unsigned int c4 = memcmp(out.str().c_str(), "00101010 00110010 00111010 01000010 01001010 01010010", 48 + 5);
@@ -324,7 +321,6 @@ void BitsTests::testReadBits(){
 	out.clear();
 	bits->setPosition(0);
 	Bits *bits6 = bits->readBits(16, 12);
-	bits6->autoFreeMem(true);
 	cout.rdbuf(out.rdbuf());
 	bits6->printAsBinary(2);
 	cout.rdbuf(orig_buf);
@@ -338,7 +334,6 @@ void BitsTests::testReadBits(){
 	out.str("");
 	out.clear();
 	Bits *bits8 = bits7->readBits(3, 5);
-	bits8->autoFreeMem(true);
 	CPPUNIT_ASSERT(bits8 != NULL);
 	cout.rdbuf(out.rdbuf());
 	bits8->printAsBinary(1);
@@ -436,9 +431,7 @@ void BitsTests::testWrite(){
 	unsigned char chunk[] = "This is a test!";
 	size_t size = sizeof(chunk) - 1;
 
-	Bits *bits = new Bits(chunk, size);
-	bits->autoFreeMem(true);
-
+	Bits *bits = new Bits(chunk, size, true);
 	bits->write((unsigned char *)"That", 4);
 
 	unsigned int c1 = memcmp(bits->getData(), "That is a test!", size);
