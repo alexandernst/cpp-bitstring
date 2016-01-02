@@ -44,6 +44,7 @@ void BitsTests::testFromFile(){
 
 	CPPUNIT_ASSERT(remove(tmpfn) == 0);
 	free(tmpfn);
+	delete bits;
 }
 
 void BitsTests::testToFile(){
@@ -103,6 +104,8 @@ void BitsTests::testToFile(){
 	CPPUNIT_ASSERT(remove(tmpfn) == 0);
 
 	free(tmpfn);
+	delete bits;
+	delete bits2;
 }
 
 void BitsTests::testFromMem(){
@@ -130,6 +133,8 @@ void BitsTests::testFromMem(){
 	free(n1);
 
 	CPPUNIT_ASSERT(bits->getPosition() == 7);
+
+	delete bits;
 }
 
 void BitsTests::testRead(){
@@ -154,6 +159,8 @@ void BitsTests::testRead(){
 	free(n2);
 
 	CPPUNIT_ASSERT(bits->getPosition() == 7);
+
+	delete bits;
 }
 
 void BitsTests::testRead_uint8(){
@@ -178,6 +185,8 @@ void BitsTests::testRead_uint8(){
 
 	i = bits->read_uint8();
 	CPPUNIT_ASSERT(i == 0 && bits->checkIfError() == true);
+
+	delete bits;
 }
 
 void BitsTests::testRead_uint16(){
@@ -199,6 +208,8 @@ void BitsTests::testRead_uint16(){
 
 	i = bits->read_uint16();
 	CPPUNIT_ASSERT(i == 0 && bits->checkIfError() == true);
+
+	delete bits;
 }
 
 void BitsTests::testRead_uint32(){
@@ -220,6 +231,8 @@ void BitsTests::testRead_uint32(){
 
 	i = bits->read_uint32();
 	CPPUNIT_ASSERT(i == 0 && bits->checkIfError() == true);
+
+	delete bits;
 }
 
 void BitsTests::testRead_uint64(){
@@ -241,6 +254,8 @@ void BitsTests::testRead_uint64(){
 
 	i = bits->read_uint64();
 	CPPUNIT_ASSERT(i == 0 && bits->checkIfError() == true);
+
+	delete bits;
 }
 
 void BitsTests::testReadBits(){
@@ -252,6 +267,7 @@ void BitsTests::testReadBits(){
 	Bits *bits = new Bits(chunk, size);
 
 	Bits *bits2 = bits->readBits(56);
+	bits2->autoFreeMem(true);
 	cout.rdbuf(out.rdbuf());
 	bits2->printAsBinary(1);
 	cout.rdbuf(orig_buf);
@@ -276,11 +292,13 @@ void BitsTests::testReadBits(){
 	bits->setPosition(0);
 	bits3 = bits->readBits(56, 1);
 	CPPUNIT_ASSERT(bits3 == NULL);
+	delete bits3;
 
 	out.str("");
 	out.clear();
 	bits->setPosition(0);
 	Bits *bits4 = bits->readBits(8, 4);
+	bits4->autoFreeMem(true);
 	cout.rdbuf(out.rdbuf());
 	bits4->printAsBinary(1);
 	cout.rdbuf(orig_buf);
@@ -294,6 +312,7 @@ void BitsTests::testReadBits(){
 	bits->setPosition(0);
 	cout.rdbuf(out.rdbuf());
 	Bits *bits5 = bits->readBits(48, 3);
+	bits5->autoFreeMem(true);
 	bits5->printAsBinary(6);
 	cout.rdbuf(orig_buf);
 	unsigned int c4 = memcmp(out.str().c_str(), "00101010 00110010 00111010 01000010 01001010 01010010", 48 + 5);
@@ -305,6 +324,7 @@ void BitsTests::testReadBits(){
 	out.clear();
 	bits->setPosition(0);
 	Bits *bits6 = bits->readBits(16, 12);
+	bits6->autoFreeMem(true);
 	cout.rdbuf(out.rdbuf());
 	bits6->printAsBinary(2);
 	cout.rdbuf(orig_buf);
@@ -318,6 +338,7 @@ void BitsTests::testReadBits(){
 	out.str("");
 	out.clear();
 	Bits *bits8 = bits7->readBits(3, 5);
+	bits8->autoFreeMem(true);
 	CPPUNIT_ASSERT(bits8 != NULL);
 	cout.rdbuf(out.rdbuf());
 	bits8->printAsBinary(1);
@@ -325,7 +346,10 @@ void BitsTests::testReadBits(){
 	unsigned int c6 = memcmp(out.str().c_str(), "10100000", 8);
 	CPPUNIT_ASSERT(c6 == 0);
 	CPPUNIT_ASSERT(bits7->getPosition() == 1);
+	delete bits7;
 	delete bits8;
+
+	delete bits;
 }
 
 void BitsTests::testCompareBinary(){
@@ -357,6 +381,8 @@ void BitsTests::testCompareBinary(){
 
 	bool res7 = bits->compareBinary("01", 3);
 	CPPUNIT_ASSERT(res7 == false);
+
+	delete bits;
 }
 
 void BitsTests::testCompareHex(){
@@ -376,6 +402,8 @@ void BitsTests::testCompareHex(){
 
 	bool res4 = bits->compareHex("54", 3);
 	CPPUNIT_ASSERT(res4 == false);
+
+	delete bits;
 }
 
 void BitsTests::testPeek(){
@@ -400,6 +428,8 @@ void BitsTests::testPeek(){
 	free(n2);
 
 	CPPUNIT_ASSERT(bits->getPosition() == 0);
+
+	delete bits;
 }
 
 void BitsTests::testWrite(){
@@ -407,6 +437,7 @@ void BitsTests::testWrite(){
 	size_t size = sizeof(chunk) - 1;
 
 	Bits *bits = new Bits(chunk, size);
+	bits->autoFreeMem(true);
 
 	bits->write((unsigned char *)"That", 4);
 
@@ -458,6 +489,8 @@ void BitsTests::testSeek(){
 
 	bool s6 = bits->seek(2, true);
 	CPPUNIT_ASSERT(s6 == false);
+
+	delete bits;
 }
 
 void BitsTests::testFindPrevious(){
@@ -488,6 +521,8 @@ void BitsTests::testFindPrevious(){
 
 	uint64_t p5 = bits->findPrevious((unsigned char *) "T", 1);
 	CPPUNIT_ASSERT(p5 == 0 && bits->checkIfError() == true);
+
+	delete bits;
 }
 
 void BitsTests::testFindNext(){
@@ -511,6 +546,8 @@ void BitsTests::testFindNext(){
 
 	uint64_t p4 = bits->findNext((unsigned char *) "?", 1);
 	CPPUNIT_ASSERT(p4 == 0 && bits->checkIfError() == true);
+
+	delete bits;
 }
 
 void BitsTests::testBit(){
@@ -542,6 +579,8 @@ void BitsTests::testBit(){
 
 	bool b8 = bits->testBit(7);
 	CPPUNIT_ASSERT(b8 == false);
+
+	delete bits;
 }
 
 void BitsTests::testSetBit(){
@@ -567,6 +606,8 @@ void BitsTests::testSetBit(){
 	unsigned int c2 = memcmp(c_c2, "k", 1);
 	CPPUNIT_ASSERT(c2 == 0);
 	free(c_c2);
+
+	delete bits;
 }
 
 void BitsTests::testUnsetBit(){
@@ -590,6 +631,8 @@ void BitsTests::testUnsetBit(){
 	unsigned int c2 = memcmp(c_c2, "I", 1);
 	CPPUNIT_ASSERT(c2 == 0);
 	free(c_c2);
+
+	delete bits;
 }
 
 void BitsTests::testToggleBit(){
@@ -614,6 +657,8 @@ void BitsTests::testToggleBit(){
 	unsigned int c2 = memcmp(c_c2, "`", 1);
 	CPPUNIT_ASSERT(c2 == 0);
 	free(c_c2);
+
+	delete bits;
 }
 
 void BitsTests::testPrintHash(){
@@ -633,6 +678,8 @@ void BitsTests::testPrintHash(){
 
 	unsigned int c1 = memcmp(out.str().c_str(), "8b6ccb43dca2040c3cfbcd7bfff0b387d4538c33", SHA_DIGEST_LENGTH);
 	CPPUNIT_ASSERT(c1 == 0);
+
+	delete bits;
 }
 
 void BitsTests::testPrintHex(){
@@ -652,6 +699,8 @@ void BitsTests::testPrintHex(){
 
 	unsigned int c1 = memcmp(out.str().c_str(), "54 68 69 73 20 69 73 20 61 20 74 65 73 74 21", (size * 2) + (size - 1));
 	CPPUNIT_ASSERT(c1 == 0);
+
+	delete bits;
 }
 
 void BitsTests::testPrintBits(){
@@ -671,4 +720,6 @@ void BitsTests::testPrintBits(){
 
 	unsigned int c1 = memcmp(out.str().c_str(), "01010100 01101000", 16 + 1);
 	CPPUNIT_ASSERT(c1 == 0);
+
+	delete bits;
 }

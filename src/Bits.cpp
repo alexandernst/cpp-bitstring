@@ -353,7 +353,6 @@ uint64_t Bits::read_uint64(bool reverse){
  */
 Bits *Bits::readBits(size_t n_bits, size_t skip_n_bits){
 	this->unsetError();
-	Bits *bits = new Bits;
 
 	/*
 	 * If we got a skip_n_bits bigger than 8, we can skip an entire byte(s)
@@ -376,7 +375,6 @@ Bits *Bits::readBits(size_t n_bits, size_t skip_n_bits){
 	}
 
 	if(this->canMoveForward(bytes_to_read) == false) {
-		delete bits;
 		return NULL;
 	}
 
@@ -389,9 +387,7 @@ Bits *Bits::readBits(size_t n_bits, size_t skip_n_bits){
 		}
 	}
 
-	bits->fromMem(tmp, bytes_to_alloc);
-
-	return bits;
+	return new Bits(tmp, bytes_to_alloc);
 }
 
 /**
