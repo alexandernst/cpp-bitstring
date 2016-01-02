@@ -11,6 +11,12 @@ Bits::Bits(unsigned char *chunk, size_t size) {
 	this->fromMem(chunk, size);
 }
 
+Bits::Bits(unsigned char *chunk, size_t size, bool auto_free_mem) {
+	this->init();
+	this->fromMem(chunk, size);
+	this->autoFreeMem(auto_free_mem);
+}
+
 /*
  * Create a new object of Bits. 'data' will be set to NULL.
  * 'position' and 'max_position' will be set to 0.

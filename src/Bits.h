@@ -29,9 +29,11 @@ class Bits {
 
 		Bits(unsigned char *chunk, size_t size);
 
+		Bits(unsigned char *chunk, size_t size, bool auto_free_mem);
+
 		virtual ~Bits();
 
-		void autoFreeMem(bool b);
+		void autoFreeMem(bool auto_free_mem);
 
 		bool canMoveBackwards(size_t n_bytes = 1);
 
