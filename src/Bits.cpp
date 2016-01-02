@@ -393,7 +393,7 @@ Bits *Bits::readBits(size_t n_bits, size_t skip_n_bits){
 		}
 	}
 
-	return new Bits(tmp, bytes_to_alloc);
+	return new Bits(tmp, bytes_to_alloc, true);
 }
 
 /**
