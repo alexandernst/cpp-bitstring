@@ -31,6 +31,8 @@ class Bits {
 
 		virtual ~Bits();
 
+		void autoFreeMem(bool b);
+
 		bool canMoveBackwards(size_t n_bytes = 1);
 
 		bool canMoveForward(size_t n_bytes = 1);
@@ -95,7 +97,7 @@ class Bits {
 
 	private:
 
-		bool is_from_file, error;
+		bool auto_free_mem, is_from_file, error;
 		unsigned char *data, *hash;
 		size_t position, max_position;
 

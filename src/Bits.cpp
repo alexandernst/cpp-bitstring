@@ -16,6 +16,7 @@ Bits::Bits(unsigned char *chunk, size_t size) {
  * 'position' and 'max_position' will be set to 0.
  */
 void Bits::init() {
+	this->auto_free_mem = false;
 	this->data = NULL;
 	this->position = 0;
 	this->max_position = 0;
@@ -38,9 +39,42 @@ Bits::~Bits(){
 		free(this->data);
 	}
 
+	if(!this->is_from_file && this->auto_free_mem && this->data != NULL){
+		free(this->data);
+	}
+
 	if(this->hash != NULL){
 		free(this->hash);
 	}
+}
+
+/*
+ * Make Bits try to auto-free the chunk it holds.
+ * This is usually helpfull when you're dealing with
+ * Bits objects that were created by another Bits objects.
+ * Example:
+ *
+ * Bits *a = new Bits("Foo bar", 7);
+ * Bits *b = a->readBits(2);
+ *
+ * delete a; // <--- ok
+ * delete b; // <--- memory leak, missing free(b->data);
+ *
+ * --------
+ *
+ * b->autoFreeMem(true);
+ * delete b; // <--- ok
+ *
+ * Note that this will segfault if set to true on a Bits
+ * object that holds a chunk that can't be freed.
+ * Example:
+ *
+ * Bits *a = new Bits("Foo bar", 7);
+ * a->autoFreeMem(true);
+ * delete a; // <--- segfault
+ */
+void Bits::autoFreeMem(bool b){
+	this->auto_free_mem = b;
 }
 
 /*
@@ -401,6 +435,7 @@ bool Bits::compareBinary(const char *string, size_t check_n_bits, size_t skip_n_
 	size_t pos = this->getPosition();
 
 	Bits *data = this->readBits(check_n_bits, skip_n_bits);
+	data->autoFreeMem(true);
 
 	char tmp_bin_repr[9];
 
