@@ -782,42 +782,97 @@ void Bits::printHash(){
 }
 
 /**
- * Print N bytes starting from the current position, in a hexadecimal representation. Nothing will be printed if the requested number of bytes is bigger than the remaining data. Cursor won't be moved.
- * @param n Number of bytes to print.
+ * Return N bytes starting from the current position, in a hexadecimal representation. NULL will be returned if the
+ * requested number of bytes is bigger than the remaining data. Cursor won't be moved.
+ * @param num_bytes Number of bytes to return.
  */
-void Bits::printAsHex(size_t n){
+unsigned char *Bits::getAsHex(size_t num_bytes){
 	this->unsetError();
-	if(this->canMoveForward(n) == false) return;
-	unsigned char *c;
-	for(size_t i = 0; i < n; i++){
+	if(this->canMoveForward(num_bytes) == false) return NULL;
+
+	unsigned char *c, *s = (unsigned char *)malloc(num_bytes * 2);
+
+	if(s == NULL) return NULL;
+
+	std::stringstream ss;
+	for(size_t i = 0; i < num_bytes; i++){
 		c = this->read(1);
-		cout << hex << setfill('0') << setw(2) << (int) *c;
-		if(i + 1 < n) {
-			cout << ' ';
-		}
+		ss << hex << setfill('0') << setw(2) << (int) *c;
 		free(c);
 	}
-	this->seek(n, true);
 
+	this->seek(num_bytes, true);
+	strcpy((char *) s, ss.str().c_str());
+
+	return s;
 }
 
 /**
- * Print N bytes starting from the current position, each byte in it's binary representation. Nothing will be printed if the requested number of bytes is bigger than the remaining data. Cursor won't be moved.
- * @param n Number of bytes to print.
+ * Print N bytes starting from the current position, in a hexadecimal representation. Nothing will be printed if the
+ * requested number of bytes is bigger than the remaining data. Cursor won't be moved.
+ * @param num_bytes Number of bytes to print.
  */
-void Bits::printAsBinary(size_t n){
-	this->unsetError();
-	if(this->canMoveForward(n) == false) return;
-	unsigned char *c;
-	for(size_t i = 0; i < n; i++){
-		c = this->read(1);
-		cout << bitset<8>(*c);
-		if(i + 1 < n) {
+void Bits::printAsHex(size_t num_bytes){
+	unsigned char *s = this->getAsHex(num_bytes);
+
+	if(s == NULL) return;
+
+	for(size_t i = 0; i < num_bytes * 2; i += 2){
+		cout << s[i] << s[i + 1];
+		if(i + 1 < num_bytes * 2) {
 			cout << ' ';
 		}
+	}
+
+	free(s);
+	this->seek(num_bytes, true);
+}
+
+/**
+ * Return N bytes starting from the current position, in a binary representation. NULL will be returned if the
+ * requested number of bytes is bigger than the remaining data. Cursor won't be moved.
+ * @param num_bytes Number of bytes to return.
+ */
+unsigned char *Bits::getAsBinary(size_t num_bytes){
+	this->unsetError();
+	if(this->canMoveForward(num_bytes) == false) return NULL;
+
+	unsigned char *c, *s = (unsigned char *)malloc(num_bytes * 8);
+
+	if(s == NULL) return NULL;
+
+	std::stringstream ss;
+	for(size_t i = 0; i < num_bytes; i++){
+		c = this->read(1);
+		ss << bitset<8>(*c);
 		free(c);
 	}
-	this->seek(n, true);
+
+	this->seek(num_bytes, true);
+	strcpy((char *) s, ss.str().c_str());
+
+	return s;
+}
+
+/**
+ * Print N bytes starting from the current position, each byte in it's binary representation. Nothing will be printed
+ * if the requested number of bytes is bigger than the remaining data. Cursor won't be moved.
+ * @param n Number of bytes to print.
+ */
+void Bits::printAsBinary(size_t num_bytes){
+	unsigned char *s = this->getAsBinary(num_bytes);
+
+	if(s == NULL) return;
+
+	for(size_t i = 0; i < num_bytes * 8; i += 8){
+		cout << s[i] << s[i + 1] << s[i + 2] << s[i + 3] << s[i + 4] << s[i + 5] << s[i + 6] << s[i + 7];
+		if(i + 1 < num_bytes * 8) {
+			cout << ' ';
+		}
+	}
+
+	free(s);
+	this->seek(num_bytes, true);
 }
 
 /**

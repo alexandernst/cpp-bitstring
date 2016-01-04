@@ -13,6 +13,7 @@
 #include <cstring>
 #include <cstdlib>
 #include <fstream>
+#include <sstream>
 #include <iomanip>
 #include <iostream>
 #include <cinttypes>
@@ -83,7 +84,11 @@ class Bits {
 
 		void printHash();
 
-		void printAsHex(size_t n);
+		unsigned char *getAsHex(size_t num_bytes);
+
+		void printAsHex(size_t num_bytes);
+
+		unsigned char *getAsBinary(size_t num_bytes);
 
 		void printAsBinary(size_t n);
 
