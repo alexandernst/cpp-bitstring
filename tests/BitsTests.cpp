@@ -681,9 +681,11 @@ void BitsTests::testGetAsHex(){
 
 	Bits *bits = new Bits(chunk, size);
 
-	unsigned int c1 = memcmp(bits->getAsHex(size), "546869732069732061207465737421", (size * 2));
+	unsigned char *s = bits->getAsHex(size);
+	unsigned int c1 = memcmp(s, "546869732069732061207465737421", (size * 2));
 	CPPUNIT_ASSERT(c1 == 0);
 
+	free(s);
 	delete bits;
 }
 
@@ -714,9 +716,11 @@ void BitsTests::testGetAsBinary(){
 
 	Bits *bits = new Bits(chunk, size);
 
-	unsigned int c1 = memcmp(bits->getAsBinary(2), "0101010001101000", 16 + 1);
+	unsigned char *s = bits->getAsBinary(2);
+	unsigned int c1 = memcmp(s, "0101010001101000", 16);
 	CPPUNIT_ASSERT(c1 == 0);
 
+	free(s);
 	delete bits;
 }
 
@@ -735,7 +739,7 @@ void BitsTests::testPrintAsBinary(){
 	//Restore cout
 	cout.rdbuf(orig_buf);
 
-	unsigned int c1 = memcmp(out.str().c_str(), "01010100 01101000", 16 + 1);
+	unsigned int c1 = memcmp(out.str().c_str(), "01010100 01101000", 16);
 	CPPUNIT_ASSERT(c1 == 0);
 
 	delete bits;
