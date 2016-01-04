@@ -128,19 +128,18 @@ bool Bits::checkIfError(){
  */
 bool Bits::fromFile(char *fname, ios_base::openmode mode){
 	this->unsetError();
-	bool state = false;
 	streampos size;
 	ifstream file;
 
 	if(fname == NULL){
 		this->setError();
-		return state;
+		return false;
 	}
 
 	file.open(fname, mode);
 	if(!file.is_open()){
 		this->setError();
-		return state;
+		return false;
 	}
 
 	file.seekg(0, ios::end);
@@ -148,13 +147,13 @@ bool Bits::fromFile(char *fname, ios_base::openmode mode){
 
 	if(size == -1){
 		this->setError();
-		return state;
+		return false;
 	}
 
 	this->data = (unsigned char *) malloc(size);
 	if(this->data == NULL){
 		this->setError();
-		return state;
+		return false;
 	}
 
 	this->position = 0;
@@ -164,9 +163,8 @@ bool Bits::fromFile(char *fname, ios_base::openmode mode){
 	file.seekg(0, ios::beg);
 	file.read((char *) data, size);
 	file.close();
-	state = true;
 
-	return state;
+	return true;
 }
 
 /**
@@ -180,17 +178,11 @@ bool Bits::fromFile(char *fname, ios_base::openmode mode){
  */
 bool Bits::toFile(char *fname, size_t offset, size_t size, ios_base::openmode mode){
 	this->unsetError();
-	bool state = false;
 	ofstream file;
 
-	if(fname == NULL){
+	if(fname == NULL || offset > this->max_position){
 		this->setError();
-		return state;
-	}
-
-	if(offset > this->max_position){
-		this->setError();
-		return state;
+		return false;
 	}
 
 	if(offset == 0 && size == 0){
@@ -201,21 +193,20 @@ bool Bits::toFile(char *fname, size_t offset, size_t size, ios_base::openmode mo
 
 	if(this->max_position < offset + size){
 		this->setError();
-		return state;
+		return false;
 	}
 
 	file.open(fname, mode);
 	if(!file.is_open()){
 		this->setError();
-		return state;
+		return false;
 	}
 
 	file.seekp(0, ios::beg);
 	file.write((const char *) this->data + offset, size);
 	file.close();
-	state = true;
 
-	return state;
+	return true;
 }
 
 /**
@@ -387,6 +378,7 @@ Bits *Bits::readBits(size_t n_bits, size_t skip_n_bits){
 	}
 
 	if(this->canMoveForward(bytes_to_read) == false) {
+		this->setError();
 		return NULL;
 	}
 
@@ -538,9 +530,7 @@ bool Bits::compareHex(const char *string, size_t check_n_bytes, size_t skip_n_by
 unsigned char *Bits::peek(size_t n, bool reverse){
 	this->unsetError();
 
-	if(n == 0) return NULL;
-
-	if(!this->canMoveForward(n)){
+	if(n == 0 || !this->canMoveForward(n)){
 		this->setError();
 		return NULL;
 	}
@@ -808,11 +798,17 @@ void Bits::printHash(){
  */
 unsigned char *Bits::getAsHex(size_t num_bytes){
 	this->unsetError();
-	if(this->canMoveForward(num_bytes) == false) return NULL;
+	if(this->canMoveForward(num_bytes) == false){
+		this->setError();
+		return NULL;
+	}
 
 	unsigned char *c, *s = (unsigned char *)malloc(num_bytes * 2);
 
-	if(s == NULL) return NULL;
+	if(s == NULL){
+		this->setError();
+		return NULL;
+	}
 
 	std::stringstream ss;
 	for(size_t i = 0; i < num_bytes; i++){
@@ -835,7 +831,10 @@ unsigned char *Bits::getAsHex(size_t num_bytes){
 void Bits::printAsHex(size_t num_bytes){
 	unsigned char *s = this->getAsHex(num_bytes);
 
-	if(s == NULL) return;
+	if(s == NULL){
+		this->setError();
+		return;
+	}
 
 	for(size_t i = 0; i < num_bytes * 2; i += 2){
 		cout << s[i] << s[i + 1];
@@ -855,11 +854,17 @@ void Bits::printAsHex(size_t num_bytes){
  */
 unsigned char *Bits::getAsBinary(size_t num_bytes){
 	this->unsetError();
-	if(this->canMoveForward(num_bytes) == false) return NULL;
+	if(this->canMoveForward(num_bytes) == false){
+		this->setError();
+		return NULL;
+	}
 
 	unsigned char *c, *s = (unsigned char *)malloc(num_bytes * 8);
 
-	if(s == NULL) return NULL;
+	if(s == NULL){
+		this->setError();
+		return NULL;
+	}
 
 	std::stringstream ss;
 	for(size_t i = 0; i < num_bytes; i++){
@@ -882,7 +887,10 @@ unsigned char *Bits::getAsBinary(size_t num_bytes){
 void Bits::printAsBinary(size_t num_bytes){
 	unsigned char *s = this->getAsBinary(num_bytes);
 
-	if(s == NULL) return;
+	if(s == NULL){
+		this->setError();
+		return;
+	}
 
 	for(size_t i = 0; i < num_bytes * 8; i += 8){
 		cout << s[i] << s[i + 1] << s[i + 2] << s[i + 3] << s[i + 4] << s[i + 5] << s[i + 6] << s[i + 7];
