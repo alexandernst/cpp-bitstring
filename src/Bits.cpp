@@ -173,7 +173,8 @@ bool Bits::fromFile(char *fname, ios_base::openmode mode){
  * Write data to file. The cursor won't be moved.
  * @param fname The path/name of the file.
  * @param offset An offset from which should start the dumping. Default is 0.
- * @param size The size (in bytes) of the data to be written. Default is the length of the data holded by the object, if offset is 0, otherwise it will be calculated if not passed.
+ * @param size The size (in bytes) of the data to be written. Default is the length of the data holded by the object,
+ * if offset is 0, otherwise it will be calculated if not passed.
  * @param mode Optional, open mode. Default is "wb".
  * @return True if data was successfully written, otherwise false.
  */
@@ -295,7 +296,8 @@ uint8_t Bits::read_uint8(){
 /**
  * Read 16 bits into an uint16_t
  * @param reverse Read the data starting from the last byte.
- * @return A uint16_t filled with 2 bytes of data or NULL if something failed. Cursor is moved 2 positions forward (or backward if reverse is true).
+ * @return A uint16_t filled with 2 bytes of data or NULL if something failed. Cursor is moved 2 positions forward
+ * (or backward if reverse is true).
  */
 uint16_t Bits::read_uint16(bool reverse){
 	this->unsetError();
@@ -315,7 +317,8 @@ uint16_t Bits::read_uint16(bool reverse){
 /**
  * Read 32 bits into an uint32_t
  * @param reverse Read the data starting from the last byte.
- * @return A uint32_t filled with 4 bytes of data or NULL if something failed. Cursor is moved 4 positions forward (or backward if reverse is true).
+ * @return A uint32_t filled with 4 bytes of data or NULL if something failed. Cursor is moved 4 positions forward
+ * (or backward if reverse is true).
  */
 uint32_t Bits::read_uint32(bool reverse){
 	this->unsetError();
@@ -335,7 +338,8 @@ uint32_t Bits::read_uint32(bool reverse){
 /**
  * Read 64 bits into an uint64_t
  * @param reverse Read the data starting from the last byte.
- * @return A uint64_t filled with 8 bytes of data or NULL if something failed. Cursor is moved 8 positions forward (or backward if reverse is true).
+ * @return A uint64_t filled with 8 bytes of data or NULL if something failed. Cursor is moved 8 positions forward
+ * (or backward if reverse is true).
  */
 uint64_t Bits::read_uint64(bool reverse){
 	this->unsetError();
@@ -352,10 +356,12 @@ uint64_t Bits::read_uint64(bool reverse){
 }
 
 /**
- * Read bits and, optionaly, skip bits from the start. The cursor will be moved by as many bytes as the round up of the (bits to read / 8) and the (bits to skip / 8).
+ * Read bits and, optionaly, skip bits from the start. The cursor will be moved by as many bytes as the round up of
+ * the (bits to read / 8) and the (bits to skip / 8).
  * @param n_bits Number of bits to read
  * @param skip_n_bits Number of bits to skip from the start. Default 0.
- * @return Bits objec containing the readed bits. Note that if there are no enough bytes to read, the object will be mapped to a 0 length data chunk.
+ * @return Bits objec containing the readed bits. Note that if there are no enough bytes to read, the object will be
+ * mapped to a 0 length data chunk.
  */
 Bits *Bits::readBits(size_t n_bits, size_t skip_n_bits){
 	this->unsetError();
