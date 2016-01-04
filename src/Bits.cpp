@@ -818,7 +818,7 @@ unsigned char *Bits::getAsHex(size_t num_bytes){
 	}
 
 	this->seek(num_bytes, true);
-	strcpy((char *) s, ss.str().c_str());
+	memcpy((char *) s, ss.str().c_str(), num_bytes * 2);
 
 	return s;
 }
@@ -874,7 +874,7 @@ unsigned char *Bits::getAsBinary(size_t num_bytes){
 	}
 
 	this->seek(num_bytes, true);
-	strcpy((char *) s, ss.str().c_str());
+	memcpy((char *) s, ss.str().c_str(), num_bytes * 8);
 
 	return s;
 }
