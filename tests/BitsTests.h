@@ -31,8 +31,12 @@ class BitsTests : public CPPUNIT_NS::TestFixture {
 	CPPUNIT_TEST(testToggleBit);
 
 	CPPUNIT_TEST(testPrintHash);
-	CPPUNIT_TEST(testPrintHex);
-	CPPUNIT_TEST(testPrintBits);
+
+	CPPUNIT_TEST(testGetAsHex);
+	CPPUNIT_TEST(testPrintAsHex);
+
+	CPPUNIT_TEST(testGetAsBinary);
+	CPPUNIT_TEST(testPrintAsBinary);
 
 	CPPUNIT_TEST_SUITE_END();
 
@@ -67,8 +71,12 @@ private:
 	void testToggleBit();
 
 	void testPrintHash();
-	void testPrintHex();
-	void testPrintBits();
+
+	void testGetAsHex();
+	void testPrintAsHex();
+
+	void testGetAsBinary();
+	void testPrintAsBinary();
 
 };
 

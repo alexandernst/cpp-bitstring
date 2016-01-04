@@ -675,7 +675,19 @@ void BitsTests::testPrintHash(){
 	delete bits;
 }
 
-void BitsTests::testPrintHex(){
+void BitsTests::testGetAsHex(){
+	unsigned char chunk[] = "This is a test!";
+	size_t size = sizeof(chunk) - 1;
+
+	Bits *bits = new Bits(chunk, size);
+
+	unsigned int c1 = memcmp(bits->getAsHex(size), "546869732069732061207465737421", (size * 2));
+	CPPUNIT_ASSERT(c1 == 0);
+
+	delete bits;
+}
+
+void BitsTests::testPrintAsHex(){
 	unsigned char chunk[] = "This is a test!";
 	size_t size = sizeof(chunk) - 1;
 
@@ -696,7 +708,19 @@ void BitsTests::testPrintHex(){
 	delete bits;
 }
 
-void BitsTests::testPrintBits(){
+void BitsTests::testGetAsBinary(){
+	unsigned char chunk[] = "This is a test!";
+	size_t size = sizeof(chunk) - 1;
+
+	Bits *bits = new Bits(chunk, size);
+
+	unsigned int c1 = memcmp(bits->getAsBinary(2), "0101010001101000", 16 + 1);
+	CPPUNIT_ASSERT(c1 == 0);
+
+	delete bits;
+}
+
+void BitsTests::testPrintAsBinary(){
 	unsigned char chunk[] = "This is a test!";
 	size_t size = sizeof(chunk) - 1;
 
