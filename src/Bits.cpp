@@ -768,13 +768,27 @@ bool Bits::toggleBit(unsigned int bit){
 }
 
 /**
+ * Get a SHA1 sum of the data holded by this object.
+ * @return SHA1 sum.
+ */
+unsigned char *Bits::getHash(){
+	this->unsetError();
+
+	if(this->hash == NULL){
+		unsigned char *hash = (unsigned char *) malloc(SHA_DIGEST_LENGTH);
+		SHA1(this->data, this->max_position, hash);
+		this->hash = hash;
+	}
+
+	return this->hash;
+}
+
+/**
  * Print a hexadecimal representation of the SHA1 sum of the data holded by the object.
  */
 void Bits::printHash(){
 	this->unsetError();
-	if(this->hash == NULL){
-		this->getHash();
-	}
+	this->getHash();
 
 	for(size_t i = 0; i < SHA_DIGEST_LENGTH; i++){
 		cout << hex << setfill('0') << setw(2) << (int) *(this->hash + i);
@@ -891,18 +905,6 @@ unsigned char *Bits::getData(){
 size_t Bits::getPosition(){
 	this->unsetError();
 	return this->position;
-}
-
-/**
- * Get a SHA1 sum of the data holded by this object.
- * @return SHA1 sum.
- */
-unsigned char *Bits::getHash(){
-	this->unsetError();
-	unsigned char *hash = (unsigned char *) malloc(SHA_DIGEST_LENGTH);
-	SHA1(this->data, this->max_position, hash);
-	this->hash = hash;
-	return hash;
 }
 
 /**
