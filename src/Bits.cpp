@@ -26,7 +26,7 @@ void Bits::init() {
 	this->data = NULL;
 	this->position = 0;
 	this->max_position = 0;
-	this->hash = NULL;
+	this->hash = 0;
 	this->error = false;
 	this->is_from_file = false;
 }
@@ -47,10 +47,6 @@ Bits::~Bits(){
 
 	if(!this->is_from_file && this->auto_free_mem && this->data != NULL){
 		free(this->data);
-	}
-
-	if(this->hash != NULL){
-		free(this->hash);
 	}
 }
 
@@ -583,6 +579,7 @@ bool Bits::write(unsigned char *chunk, size_t n, bool patch){
 
 	}
 
+	this->hash = 0;
 	this->position += n;
 	return true;
 }
@@ -764,19 +761,63 @@ bool Bits::toggleBit(unsigned int bit){
 }
 
 /**
- * Get a SHA1 sum of the data holded by this object.
- * @return SHA1 sum.
+ * Get a hash of the data holded by this object.
+ * Hash algo: http://www.azillionmonkeys.com/qed/hash.html
+ * @return uin32_t hash.
  */
-unsigned char *Bits::getHash(){
+uint32_t Bits::getHash(){
 	this->unsetError();
 
-	if(this->hash == NULL){
-		unsigned char *hash = (unsigned char *) malloc(SHA_DIGEST_LENGTH);
-		SHA1(this->data, this->max_position, hash);
-		this->hash = hash;
+	if(this->hash != 0){
+		return this->hash;
 	}
 
-	return this->hash;
+	uint32_t hash = this->max_position, tmp;
+	int rem, len = this->max_position;
+
+	if (len <= 0 || this->data == NULL) return 0;
+
+	rem = len & 3;
+	len >>= 2;
+
+	/* Main loop */
+	for (;len > 0; len--) {
+		hash += get16bits (this->data);
+		tmp   = (get16bits (this->data + 2) << 11) ^ hash;
+		hash  = (hash << 16) ^ tmp;
+		data += 2*sizeof (uint16_t);
+		hash += hash >> 11;
+	}
+
+	/* Handle end cases */
+	switch (rem) {
+		case 3:
+			hash += get16bits (this->data);
+			hash ^= hash << 16;
+			hash ^= ((signed char)this->data[sizeof (uint16_t)]) << 18;
+			hash += hash >> 11;
+			break;
+		case 2:
+			hash += get16bits (this->data);
+			hash ^= hash << 11;
+			hash += hash >> 17;
+			break;
+		case 1:
+			hash += (signed char)*(this->data);
+			hash ^= hash << 10;
+			hash += hash >> 1;
+	}
+
+	/* Force "avalanching" of final 127 bits */
+	hash ^= hash << 3;
+	hash += hash >> 5;
+	hash ^= hash << 4;
+	hash += hash >> 17;
+	hash ^= hash << 25;
+	hash += hash >> 6;
+
+	this->hash = hash;
+	return hash;
 }
 
 /**
@@ -786,9 +827,7 @@ void Bits::printHash(){
 	this->unsetError();
 	this->getHash();
 
-	for(size_t i = 0; i < SHA_DIGEST_LENGTH; i++){
-		cout << hex << setfill('0') << setw(2) << (int) *(this->hash + i);
-	}
+	cout << hex << setfill('0') << setw(2) << this->hash;
 }
 
 /**

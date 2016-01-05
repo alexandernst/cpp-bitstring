@@ -669,7 +669,7 @@ void BitsTests::testPrintHash(){
 	//Restore cout
 	cout.rdbuf(orig_buf);
 
-	unsigned int c1 = memcmp(out.str().c_str(), "8b6ccb43dca2040c3cfbcd7bfff0b387d4538c33", SHA_DIGEST_LENGTH);
+	unsigned int c1 = memcmp(out.str().c_str(), "706f2f62", sizeof(uint32_t));
 	CPPUNIT_ASSERT(c1 == 0);
 
 	delete bits;
