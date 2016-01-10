@@ -492,27 +492,27 @@ void BitsTests::testFindPrevious(){
 
 	Bits *bits = new Bits(chunk, size);
 
-	uint64_t p1 = bits->findNext((unsigned char *) "!", 1);
+	uint64_t p1 = bits->findNext("!", 1);
 	CPPUNIT_ASSERT(p1 == 65);
 
 	bits->setPosition(p1 + 1);
 
-	uint64_t p2 = bits->findNext((unsigned char *) "!", 1);
+	uint64_t p2 = bits->findNext("!", 1);
 	CPPUNIT_ASSERT(p2 == 66);
 
 	bits->setPosition(p2);
 
-	uint64_t p3 = bits->findPrevious((unsigned char *) "45", 2);
+	uint64_t p3 = bits->findPrevious("45", 2);
 	CPPUNIT_ASSERT(p3 == 39);
 
 	bits->setPosition(bits->getMaxPosition());
 
-	uint64_t p4 = bits->findPrevious((unsigned char *) "!?", 2);
+	uint64_t p4 = bits->findPrevious("!?", 2);
 	CPPUNIT_ASSERT(p4 == 66);
 
 	bits->setPosition(0);
 
-	uint64_t p5 = bits->findPrevious((unsigned char *) "T", 1);
+	uint64_t p5 = bits->findPrevious("T", 1);
 	CPPUNIT_ASSERT(p5 == 0 && bits->checkIfError() == true);
 
 	delete bits;
@@ -524,20 +524,20 @@ void BitsTests::testFindNext(){
 
 	Bits *bits = new Bits(chunk, size);
 
-	uint64_t p1 = bits->findNext((unsigned char *) "a", 1);
+	uint64_t p1 = bits->findNext("a", 1);
 	CPPUNIT_ASSERT(p1 == 8);
 
-	uint64_t p2 = bits->findNext((unsigned char *) "rand", 4);
+	uint64_t p2 = bits->findNext("rand", 4);
 	CPPUNIT_ASSERT(p2 == 43);
 
 	bits->setPosition(p2);
 
-	uint64_t p3 = bits->findNext((unsigned char *) "52", 2);
+	uint64_t p3 = bits->findNext("52", 2);
 	CPPUNIT_ASSERT(p3 == 60);
 
 	bits->setPosition(bits->getMaxPosition());
 
-	uint64_t p4 = bits->findNext((unsigned char *) "?", 1);
+	uint64_t p4 = bits->findNext("?", 1);
 	CPPUNIT_ASSERT(p4 == 0 && bits->checkIfError() == true);
 
 	delete bits;
