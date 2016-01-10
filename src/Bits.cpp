@@ -207,20 +207,10 @@ bool Bits::toFile(const string& fname, size_t offset, size_t size, ios_base::ope
 
 
 bool Bits::toRandFile(const string& dir, const string& ext, size_t offset, size_t size, ios_base::openmode mode){
-	static const char alphanum[] = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
 	stringstream ss;
+	ss << dir << Utils::randomString(15) << "." << ext;
 
-	std::random_device rd;
-	std::mt19937 rng(rd());
-	std::uniform_int_distribution<int> uni(0, sizeof(alphanum) - 1);
-
-	ss << dir;
-	for (int i = 0; i < 15; ++i) {
-		ss << alphanum[uni(rng)];
-	}
-	ss << "." << ext;
-
-	return this->toFile((char *) ss.str().c_str(), offset, size, mode);
+	return this->toFile(ss.str(), offset, size, mode);
 }
 
 /**
@@ -450,7 +440,7 @@ bool Bits::compareBinary(const string& str, size_t check_n_bits, size_t skip_n_b
 	Bits *data = this->readBits(check_n_bits, skip_n_bits);
 	data->autoFreeMem(true);
 
-	char tmp_bin_repr[9];
+	char tmp_bin_repr[8];
 
 	for(size_t i = 0; i < bytes; i++) {
 		int chars_to_compare = i + 1 == bytes ? check_n_bits % 8 : 8;
@@ -628,7 +618,7 @@ bool Bits::seek(size_t n, bool reverse){
  * @param n The number of bytes the pattern is long.
  * @return Position/offset or error is set to true and 0 is returned if nothing was found.
  */
-size_t Bits::findPrevious(unsigned char *pattern, size_t n){
+size_t Bits::findPrevious(const string& pattern, size_t n){
 	this->unsetError();
 	size_t res = 0, tmppos = this->position;
 	bool found = false;
@@ -639,7 +629,7 @@ size_t Bits::findPrevious(unsigned char *pattern, size_t n){
 			continue;
 		}
 
-		bool c1 = memcmp(this->data + this->position, pattern, n);
+		bool c1 = memcmp(this->data + this->position, pattern.c_str(), n);
 		if(c1 == 0){
 			res = this->position;
 			found = true;
@@ -666,13 +656,13 @@ size_t Bits::findPrevious(unsigned char *pattern, size_t n){
  * @param n The number of bytes the pattern is long.
  * @return Position/offset or error is set to true and 0 is returned if nothing was found.
  */
-size_t Bits::findNext(unsigned char *pattern, size_t n){
+size_t Bits::findNext(const string& pattern, size_t n){
 	this->unsetError();
 	size_t res = 0, tmppos = this->position;
 	bool found = false;
 
 	while(this->canMoveForward(n)){
-		bool c1 = memcmp(this->data + this->position, pattern, n);
+		bool c1 = memcmp(this->data + this->position, pattern.c_str(), n);
 		if(c1 == 0){
 			res = this->position;
 			found = true;

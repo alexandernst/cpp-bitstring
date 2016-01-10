@@ -9,7 +9,6 @@
 #include <cmath>
 #include <bitset>
 #include <cstdio>
-#include <random>
 #include <cstdint>
 #include <cstring>
 #include <cstdlib>
@@ -81,9 +80,9 @@ class Bits {
 
 		bool seek(size_t n, bool reverse = false);
 
-		size_t findPrevious(unsigned char *pattern, size_t n);
+		size_t findPrevious(const string& pattern, size_t n);
 
-		size_t findNext(unsigned char *pattern, size_t n);
+		size_t findNext(const string& pattern, size_t n);
 
 		bool testBit(unsigned int bit);
 

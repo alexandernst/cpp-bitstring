@@ -36,3 +36,18 @@ const string Utils::removeSpaces(const string& str) {
 
 	return s.str();
 }
+
+string Utils::randomString(size_t len){
+	stringstream ss;
+	static const char alphanum[] = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+
+	std::random_device rd;
+	std::mt19937 rng(rd());
+	std::uniform_int_distribution<int> uni(0, sizeof(alphanum) - 1);
+
+	for (size_t i = 0; i < len; ++i) {
+		ss << alphanum[uni(rng)];
+	}
+
+	return ss.str();
+}
