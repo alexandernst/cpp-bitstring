@@ -3,17 +3,18 @@
 
 #include <cstdio>
 #include <cctype>
+#include <string>
 #include <cstdlib>
-#include <cstring>
+#include <sstream>
 
 using namespace std;
 
 class Utils {
 
 	public:
-		static bool isValidHexString(unsigned char *string);
-		static bool isValidBinString(unsigned char *string);
-		static unsigned char *removeSpaces(const char *string);
+		static bool isValidHexString(const string& str = "");
+		static bool isValidBinString(const string& str = "");
+		static const string removeSpaces(const string& str = "");
 
 };
 

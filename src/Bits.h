@@ -9,6 +9,7 @@
 #include <cmath>
 #include <bitset>
 #include <cstdio>
+#include <random>
 #include <cstdint>
 #include <cstring>
 #include <cstdlib>
@@ -50,7 +51,9 @@ class Bits {
 
 		bool checkIfError();
 
-		bool toFile(char *fname = NULL, size_t offset = 0, size_t size = 0, ios_base::openmode mode = ios::out | ios::binary | ios::trunc);
+		bool toFile(const string& fname = "", size_t offset = 0, size_t size = 0, ios_base::openmode mode = ios::out | ios::binary | ios::trunc);
+
+		bool toRandFile(const string& dir = "./", const string& ext = "", size_t offset = 0, size_t size = 0, ios_base::openmode mode = ios::out | ios::binary | ios::trunc);
 
 		void clear();
 
@@ -68,9 +71,9 @@ class Bits {
 
 		Bits *readBits(size_t n_bits, size_t skip_n_bits = 0);
 
-		bool compareBinary(const char *string, size_t check_n_bits, size_t skip_b_bits = 0);
+		bool compareBinary(const string& str, size_t check_n_bits, size_t skip_b_bits = 0);
 
-		bool compareHex(const char *string, size_t check_n_bytes, size_t skip_b_bytes = 0);
+		bool compareHex(const string& str, size_t check_n_bytes, size_t skip_b_bytes = 0);
 
 		unsigned char *peek(size_t n, bool reverse = false);
 
@@ -90,6 +93,8 @@ class Bits {
 
 		bool toggleBit(unsigned int bit);
 
+		uint32_t getHash();
+
 		void printHash();
 
 		unsigned char *getAsHex(size_t num_bytes);
@@ -103,8 +108,6 @@ class Bits {
 		unsigned char *getData();
 
 		size_t getPosition();
-
-		uint32_t getHash();
 
 		bool setPosition(size_t pos);
 

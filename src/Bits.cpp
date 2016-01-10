@@ -172,11 +172,11 @@ bool Bits::fromFile(char *fname, ios_base::openmode mode){
  * @param mode Optional, open mode. Default is "wb".
  * @return True if data was successfully written, otherwise false.
  */
-bool Bits::toFile(char *fname, size_t offset, size_t size, ios_base::openmode mode){
+bool Bits::toFile(const string& fname, size_t offset, size_t size, ios_base::openmode mode){
 	this->unsetError();
 	ofstream file;
 
-	if(fname == NULL || offset > this->max_position){
+	if(fname.empty() || offset > this->max_position){
 		this->setError();
 		return false;
 	}
@@ -192,7 +192,7 @@ bool Bits::toFile(char *fname, size_t offset, size_t size, ios_base::openmode mo
 		return false;
 	}
 
-	file.open(fname, mode);
+	file.open(fname.c_str(), mode);
 	if(!file.is_open()){
 		this->setError();
 		return false;
@@ -203,6 +203,24 @@ bool Bits::toFile(char *fname, size_t offset, size_t size, ios_base::openmode mo
 	file.close();
 
 	return true;
+}
+
+
+bool Bits::toRandFile(const string& dir, const string& ext, size_t offset, size_t size, ios_base::openmode mode){
+	static const char alphanum[] = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+	stringstream ss;
+
+	std::random_device rd;
+	std::mt19937 rng(rd());
+	std::uniform_int_distribution<int> uni(0, sizeof(alphanum) - 1);
+
+	ss << dir;
+	for (int i = 0; i < 15; ++i) {
+		ss << alphanum[uni(rng)];
+	}
+	ss << "." << ext;
+
+	return this->toFile((char *) ss.str().c_str(), offset, size, mode);
 }
 
 /**
@@ -397,7 +415,7 @@ Bits *Bits::readBits(size_t n_bits, size_t skip_n_bits){
  * @param size_t Number of bits to skip.
  * @return True if data is equal to the given binary represenntation.
  */
-bool Bits::compareBinary(const char *string, size_t check_n_bits, size_t skip_n_bits){
+bool Bits::compareBinary(const string& str, size_t check_n_bits, size_t skip_n_bits){
 	bool match = true;
 
 	/*
@@ -418,10 +436,9 @@ bool Bits::compareBinary(const char *string, size_t check_n_bits, size_t skip_n_
 	 */
 	if(this->canMoveForward(bytes_with_skip) == false) return false;
 
-	unsigned char *bin_string = Utils::removeSpaces(string);
-	size_t len = strlen((const char *) bin_string);
+	string bin_string = Utils::removeSpaces(str);
+	size_t len = bin_string.size();
 	if(!Utils::isValidBinString(bin_string) || len < check_n_bits) {
-		free(bin_string);
 		return false;
 	}
 
@@ -452,7 +469,6 @@ bool Bits::compareBinary(const char *string, size_t check_n_bits, size_t skip_n_
 	}
 
 	delete data;
-	free(bin_string);
 
 	/*
 	 * Restore the position in which the cursor was before the compare process.
@@ -469,21 +485,19 @@ bool Bits::compareBinary(const char *string, size_t check_n_bits, size_t skip_n_
  * @param size_t Number of bytes to skip.
  * @return True if data is equal to the given hex represenntation.
  */
-bool Bits::compareHex(const char *string, size_t check_n_bytes, size_t skip_n_bytes){
-	bool match = true;
+bool Bits::compareHex(const string& str, size_t check_n_bytes, size_t skip_n_bytes){
 	/*
 	 * Check if there are enough bytes to read.
 	 */
 	if(this->canMoveForward(check_n_bytes) == false) return false;
 
-	unsigned char *hex_string = Utils::removeSpaces(string);
-	size_t len = strlen((const char *) hex_string);
+	string hex_string = Utils::removeSpaces(str);
+	size_t len = hex_string.size();
 
 	/*
 	 * If the received string is not a valid hex representation, quit.
 	 */
 	if(!Utils::isValidHexString(hex_string) || len < check_n_bytes * 2) {
-		free(hex_string);
 		return false;
 	}
 
@@ -500,21 +514,20 @@ bool Bits::compareHex(const char *string, size_t check_n_bytes, size_t skip_n_by
 	for(size_t i = 0; i < check_n_bytes; i++) {
 		sprintf((char *) &tmp_hex_repr, "%X", data[i]);
 
-		if(memcmp(tmp_hex_repr, &hex_string[i * 2], 2) != 0) {
-			match = false;
-			break;
+		if(memcmp(tmp_hex_repr, hex_string.substr(i * 2, 2).c_str(), 2) != 0) {
+			free(data);
+			return false;
 		}
 	}
 
 	free(data);
-	free(hex_string);
 
 	/*
 	 * Restore the position in which the cursor was before the compare process.
 	 */
 	this->setPosition(pos);
 
-	return match;
+	return true;
 }
 
 /**
