@@ -19,12 +19,12 @@ install:
     - sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-5 10
     - sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-5 10
 
-    - wget https://github.com/mesonbuild/meson/releases/download/0.26.0/meson_0.26.0.tar.gz
-    - tar -xvf meson_0.26.0.tar.gz
-    - cd meson-0.26.0
+    - wget https://github.com/mesonbuild/meson/releases/download/0.28.0/meson_0.28.0.tar.gz
+    - tar -xvf meson_0.28.0.tar.gz
+    - cd meson-0.28.0
     - python3.4 install_meson.py --prefix /home/`whoami`/meson
     - cd ..
-    - rm -rf meson-0.26.0 meson_0.26.0.tar.gz
+    - rm -rf meson-0.28.0 meson_0.28.0.tar.gz
 
 script:
     - p=`pwd`
