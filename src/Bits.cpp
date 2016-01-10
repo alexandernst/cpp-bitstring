@@ -1,7 +1,7 @@
 #include "Bits.h"
 using namespace std;
 
-Bits::Bits(char *fname, ios_base::openmode mode) {
+Bits::Bits(const string& fname, ios_base::openmode mode) {
 	this->init();
 	this->fromFile(fname, mode);
 }
@@ -122,17 +122,17 @@ bool Bits::checkIfError(){
  * @param mode Optional, open mode. Default is "rb".
  * @return True if data was successfully readen, otherwise false.
  */
-bool Bits::fromFile(char *fname, ios_base::openmode mode){
+bool Bits::fromFile(const string& fname, ios_base::openmode mode){
 	this->unsetError();
 	streampos size;
 	ifstream file;
 
-	if(fname == NULL){
+	if(fname.empty()){
 		this->setError();
 		return false;
 	}
 
-	file.open(fname, mode);
+	file.open(fname.c_str(), mode);
 	if(!file.is_open()){
 		this->setError();
 		return false;
