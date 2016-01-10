@@ -19,14 +19,6 @@ cppbitstringstatic = static_library(
 	cpp_args : '-fPIC'
 )
 
-pkgconfig_gen(
-	libraries : cppbitstring,
-	version : '0.1',
-	name : 'libcpp-bitstring',
-	filebase : 'cpp-bitstring',
-	description : ''
-)
-
 unittests = executable(
 	'unittests', 'tests/main.cpp', 'tests/BitsTests.cpp',
 	dependencies: cppunittest_dep,
