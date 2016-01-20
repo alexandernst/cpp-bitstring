@@ -20,7 +20,7 @@ cppbitstringstatic = static_library(
 )
 
 unittests = executable(
-	'unittests', 'tests/main.cpp', 'tests/BitsTests.cpp',
+	'unittests', 'tests/main.cpp', 'tests/BitsTests.cpp', 'tests/UtilsTests.cpp',
 	dependencies: cppunittest_dep,
 	link_with : cppbitstringstatic
 )
