@@ -436,6 +436,14 @@ bool Bits::compareBinary(const string& str, size_t check_n_bits, size_t skip_n_b
 
 	string bin_string = Utils::removeSpaces(str);
 	size_t len = bin_string.size();
+
+	if(check_n_bits < len){
+		bin_string = bin_string.substr(0, check_n_bits);
+	}
+
+	/*
+	 * If the received string is not a valid bin representation, quit.
+	 */
 	if(!Utils::isValidBinString(bin_string) || len < check_n_bits) {
 		return false;
 	}
