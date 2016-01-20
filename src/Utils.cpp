@@ -17,8 +17,10 @@ bool Utils::isValidHexString(const string& str) {
 	if(len % 2 != 0) return false;
 
 	for(string::size_type i = 0; i < len; ++i) {
-		if( (str[i] < 65 && str[i] > 70) && !isdigit(str[i]) ) {
-			return false;
+		if(str[i] < 65 || str[i] > 70) {
+			if(!isdigit(str[i])) {
+				return false;
+			}
 		}
 	}
 
@@ -50,4 +52,14 @@ string Utils::randomString(size_t len){
 	}
 
 	return ss.str();
+}
+
+string Utils::trim(const string& str){
+	string s;
+	s.assign(str);
+
+	s.erase(std::remove(s.begin(), s.end(), '\n'), s.end());
+	s.erase(std::remove(s.begin(), s.end(), '\r'), s.end());
+
+	return s;
 }
