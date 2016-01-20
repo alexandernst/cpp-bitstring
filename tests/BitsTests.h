@@ -2,7 +2,6 @@
 #define	BITSTESTS_H
 
 #include <cppunit/extensions/HelperMacros.h>
-#include <openssl/sha.h>
 
 class BitsTests : public CPPUNIT_NS::TestFixture {
 	CPPUNIT_TEST_SUITE(BitsTests);
