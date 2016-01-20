@@ -492,6 +492,10 @@ bool Bits::compareHex(const string& str, size_t check_n_bytes, size_t skip_n_byt
 	string hex_string = Utils::removeSpaces(str);
 	size_t len = hex_string.size();
 
+	if(check_n_bytes * 2 < len){
+		hex_string = hex_string.substr(0, check_n_bytes * 2);
+	}
+
 	/*
 	 * If the received string is not a valid hex representation, quit.
 	 */
