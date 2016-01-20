@@ -39,43 +39,43 @@ class BitsTests : public CPPUNIT_NS::TestFixture {
 
 	CPPUNIT_TEST_SUITE_END();
 
-public:
-	BitsTests();
-	virtual ~BitsTests();
-	void setUp();
-	void tearDown();
+	public:
+		BitsTests();
+		virtual ~BitsTests();
+		void setUp();
+		void tearDown();
 
-private:
-	void testFromFile();
-	void testToFile();
-	void testFromMem();
-	void testRead();
-	void testRead_uint8();
-	void testRead_uint16();
-	void testRead_uint32();
-	void testRead_uint64();
-	void testReadBits();
-	void testCompareBinary();
-	void testCompareHex();
-	void testPeek();
-	void testWrite();
-	void testSeek();
+	private:
+		void testFromFile();
+		void testToFile();
+		void testFromMem();
+		void testRead();
+		void testRead_uint8();
+		void testRead_uint16();
+		void testRead_uint32();
+		void testRead_uint64();
+		void testReadBits();
+		void testCompareBinary();
+		void testCompareHex();
+		void testPeek();
+		void testWrite();
+		void testSeek();
 
-	void testFindPrevious();
-	void testFindNext();
+		void testFindPrevious();
+		void testFindNext();
 
-	void testBit();
-	void testSetBit();
-	void testUnsetBit();
-	void testToggleBit();
+		void testBit();
+		void testSetBit();
+		void testUnsetBit();
+		void testToggleBit();
 
-	void testPrintHash();
+		void testPrintHash();
 
-	void testGetAsHex();
-	void testPrintAsHex();
+		void testGetAsHex();
+		void testPrintAsHex();
 
-	void testGetAsBinary();
-	void testPrintAsBinary();
+		void testGetAsBinary();
+		void testPrintAsBinary();
 
 };
 
