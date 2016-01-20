@@ -205,7 +205,15 @@ bool Bits::toFile(const string& fname, size_t offset, size_t size, ios_base::ope
 	return true;
 }
 
-
+/**
+ * Same as ::toFile with the only difference that instead of passing a full path to the output file,
+ * you pass a directory and an extension and the method generates a random name for the file.
+ * @param dir Output directory. Default is './'.
+ * @param ext Extension, optional.
+ * @param offset See ::toFile
+ * @param mode See ::toFile
+ * @return See ::toFile
+ */
 bool Bits::toRandFile(const string& dir, const string& ext, size_t offset, size_t size, ios_base::openmode mode){
 	stringstream ss;
 	ss << dir << Utils::randomString(15) << "." << ext;
