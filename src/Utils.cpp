@@ -55,8 +55,7 @@ string Utils::randomString(size_t len){
 }
 
 string Utils::trim(const string& str){
-	string s;
-	s.assign(str);
+	string s = str;
 
 	s.erase(std::remove(s.begin(), s.end(), '\n'), s.end());
 	s.erase(std::remove(s.begin(), s.end(), '\r'), s.end());
