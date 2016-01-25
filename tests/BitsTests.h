@@ -6,6 +6,9 @@
 class BitsTests : public CPPUNIT_NS::TestFixture {
 	CPPUNIT_TEST_SUITE(BitsTests);
 
+	CPPUNIT_TEST(testCanMoveBackwards);
+	CPPUNIT_TEST(testCanMoveForward);
+
 	CPPUNIT_TEST(testFromFile);
 	CPPUNIT_TEST(testToFile);
 	CPPUNIT_TEST(testFromMem);
@@ -46,6 +49,8 @@ class BitsTests : public CPPUNIT_NS::TestFixture {
 		void tearDown();
 
 	private:
+		void testCanMoveBackwards();
+		void testCanMoveForward();
 		void testFromFile();
 		void testToFile();
 		void testFromMem();

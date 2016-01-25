@@ -18,6 +18,49 @@ void BitsTests::tearDown(){
 	//Finishing tests...
 }
 
+void BitsTests::testCanMoveBackwards(){
+	unsigned char chunk[] = "This is a test!";
+	size_t size = sizeof(chunk) - 1;
+
+	Bits *bits = new Bits(chunk, size);
+
+	bool b1 = bits->canMoveBackwards(0);
+	CPPUNIT_ASSERT(b1 == true);
+
+	bits->setPosition(15);
+	bool b2 = bits->canMoveBackwards(15);
+	CPPUNIT_ASSERT(b2 == true);
+
+	bits->setPosition(14);
+	bool b3 = bits->canMoveBackwards(15);
+	CPPUNIT_ASSERT(b3 == false);
+}
+
+void BitsTests::testCanMoveForward(){
+	unsigned char chunk[] = "This is a test!";
+	size_t size = sizeof(chunk) - 1;
+
+	Bits *bits = new Bits(chunk, size);
+
+	bool b1 = bits->canMoveForward(15);
+	CPPUNIT_ASSERT(b1 == true);
+
+	bool b2 = bits->canMoveForward(16);
+	CPPUNIT_ASSERT(b2 == false);
+
+	bits->setPosition(14);
+	bool b3 = bits->canMoveForward(1);
+	CPPUNIT_ASSERT(b3 == true);
+
+	bits->setPosition(15);
+	bool b4 = bits->canMoveForward(0);
+	CPPUNIT_ASSERT(b4 == true);
+
+	bits->setPosition(15);
+	bool b5 = bits->canMoveForward(1);
+	CPPUNIT_ASSERT(b5 == false);
+}
+
 void BitsTests::testFromFile(){
 	unsigned char chunk[] = "This is a test!";
 	size_t size = sizeof(chunk) - 1;
